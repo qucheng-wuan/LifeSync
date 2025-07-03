@@ -971,12 +971,34 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 LifeSync. 保留所有权利。 | 让每一天都充满意义</p>
+            <p>&copy; 2025 LifeSync. 保留所有权利。 | 让每一天都充满意义</p>
         </div>
     </footer>
 
     <script src="js/common.js"></script>
     <script src="js/mood-diary.js"></script>
+    <script>
+        function sanitizeInput(input) {
+            return input.replace(/<[^>]*>/g, '');
+        }
+
+        function getSafeURLParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const param = urlParams.get(name);
+            return param ? param.replace(/[<>\"'&]/g, '') : null;
+        }
+
+        function escapeHTML(html) {
+            const escapeMap = {
+                '<': '&lt;',
+                '>': '&gt;',
+                '&': '&amp;',
+                '"': '&quot;',
+                "'": '&#39;'
+            };
+            return html.replace(/[<>&"']/g, (char) => escapeMap[char]);
+        }
+    </script>
 </body>
 
 </html>
