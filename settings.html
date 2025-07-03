@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .settings-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .settings-header {
+            background: linear-gradient(135deg, #00cec9 0%, #00b894 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .settings-nav {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .nav-item {
+            flex-shrink: 0;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .nav-item.active {
+            background: #00cec9;
+            color: white;
+        }
+
+        .settings-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .setting-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .setting-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .setting-info {
+            flex: 1;
+            margin-right: 1rem;
+        }
+
+        .setting-title {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            color: #333;
+        }
+
+        .setting-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #00cec9;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(26px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+            display: block;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #00cec9;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-option.selected {
+            border-color: #00cec9;
+            transform: scale(1.1);
+        }
+
+        .danger-zone {
+            background: #fff5f5;
+            border: 2px solid #fed7d7;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .danger-title {
+            color: #e53e3e;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .danger-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: #c53030;
+        }
+
+        .save-btn {
+            background: #00cec9;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .save-btn:hover {
+            background: #00b894;
+        }
+
+        .backup-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .backup-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px dashed #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .backup-item:hover {
+            border-color: #00cec9;
+            background: #f0fffe;
+        }
+
+        .backup-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .setting-item {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .setting-info {
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">LifeSync</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                        <li><a href="mood-trends.html">趋势报告</a></li>
+                        <li><a href="mood-assessment.html">健康评估</a></li>
+                        <li><a href="mood-training.html">情绪训练</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">个人中心 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="profile.html">个人资料</a></li>
+                        <li><a href="dashboard.html">数据概览</a></li>
+                        <li><a href="settings.html">系统设置</a></li>
+                        <li><a href="account-security.html">账户安全</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">个人中心</a></span>
+            <span class="separator">›</span>
+            <span class="current">系统设置</span>
+        </div>
+
+        <div class="settings-container">
+            <div class="settings-header">
+                <h1>⚙️ 系统设置</h1>
+                <p>个性化你的LifeSync体验</p>
+            </div>
+
+            <div class="settings-nav">
+                <div class="nav-item active" data-panel="general">常规设置</div>
+                <div class="nav-item" data-panel="notifications">通知提醒</div>
+                <div class="nav-item" data-panel="appearance">外观主题</div>
+                <div class="nav-item" data-panel="privacy">隐私安全</div>
+                <div class="nav-item" data-panel="data">数据管理</div>
+            </div>
+
+            <!-- 常规设置面板 -->
+            <div class="settings-content panel active" id="generalPanel">
+                <div class="setting-section">
+                    <div class="section-title">
+                        🌐 语言和地区
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">显示语言</label>
+                        <select class="form-select" id="language">
+                            <option value="zh-CN">简体中文</option>
+                            <option value="en-US">English</option>
+                            <option value="ja-JP">日本語</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">时区</label>
+                        <select class="form-select" id="timezone">
+                            <option value="Asia/Shanghai">北京时间 (UTC+8)</option>
+                            <option value="America/New_York">纽约时间 (UTC-5)</option>
+                            <option value="Europe/London">伦敦时间 (UTC+0)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-section">
+                    <div class="section-title">
+                        📅 日期和时间
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">24小时制</div>
+                            <div class="setting-desc">使用24小时时间格式显示时间</div>
+                        </div>
+                        <div class="toggle-switch active" data-setting="hour24">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">周开始日</div>
+                            <div class="setting-desc">设置日历显示的一周开始日期</div>
+                        </div>
+                        <select class="form-select" style="width: 120px;" id="weekStart">
+                            <option value="0">周日</option>
+                            <option value="1" selected>周一</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-section">
+                    <div class="section-title">
+                        🔧 功能设置
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">自动保存</div>
+                            <div class="setting-desc">输入内容时自动保存到本地存储</div>
+                        </div>
+                        <div class="toggle-switch active" data-setting="autoSave">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">智能提醒</div>
+                            <div class="setting-desc">基于使用习惯智能推送提醒</div>
+                        </div>
+                        <div class="toggle-switch active" data-setting="smartReminders">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="save-btn" onclick="saveGeneralSettings()">保存设置</button>
+            </div>
+
+            <!-- 通知提醒面板 -->
+            <div class="settings-content panel" id="notificationsPanel">
+                <div class="setting-section">
+                    <div class="section-title">
+                        🔔 推送通知
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">桌面通知</div>
+                            <div class="setting-desc">在桌面显示重要提醒和更新</div>
+                        </div>
+                        <div class="toggle-switch active" data-setting="desktopNotifications">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">邮件通知</div>
+                            <div class="setting-desc">接收日报、周报等邮件提醒</div>
+                        </div>
+                        <div class="toggle-switch" data-setting="emailNotifications">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">声音提醒</div>
+                            <div class="setting-desc">播放提示音来提醒重要事件</div>
+                        </div>
+                        <div class="toggle-switch active" data-setting="soundAlerts">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-section">
+                    <div class="section-title">
+                        ⏰ 提醒时间
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">日报发送时间</label>
+                        <input type="time" class="form-input" value="20:00">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">习惯提醒间隔</label>
+                        <select class="form-select">
+                            <option value="30">30分钟</option>
+                            <option value="60" selected>1小时</option>
+                            <option value="120">2小时</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="save-btn" onclick="saveNotificationSettings()">保存设置</button>
+            </div>
+
+            <!-- 外观主题面板 -->
+            <div class="settings-content panel" id="appearancePanel">
+                <div class="setting-section">
+                    <div class="section-title">
+                        🎨 主题设置
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">深色模式</div>
+                            <div class="setting-desc">在低光环境下保护眼睛</div>
+                        </div>
+                        <div class="toggle-switch" data-setting="darkMode">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">主题色彩</label>
+                        <div class="color-picker">
+                            <div class="color-option selected" style="background: #667eea;" data-color="#667eea"></div>
+                            <div class="color-option" style="background: #00cec9;" data-color="#00cec9"></div>
+                            <div class="color-option" style="background: #fd79a8;" data-color="#fd79a8"></div>
+                            <div class="color-option" style="background: #fdcb6e;" data-color="#fdcb6e"></div>
+                            <div class="color-option" style="background: #00b894;" data-color="#00b894"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-section">
+                    <div class="section-title">
+                        📱 显示设置
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">字体大小</label>
+                        <select class="form-select">
+                            <option value="small">小</option>
+                            <option value="medium" selected>中</option>
+                            <option value="large">大</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">紧凑布局</div>
+                            <div class="setting-desc">减少界面元素间距，显示更多内容</div>
+                        </div>
+                        <div class="toggle-switch" data-setting="compactLayout">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="save-btn" onclick="saveAppearanceSettings()">保存设置</button>
+            </div>
+
+            <!-- 隐私安全面板 -->
+            <div class="settings-content panel" id="privacyPanel">
+                <div class="setting-section">
+                    <div class="section-title">
+                        🔒 隐私保护
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">数据加密</div>
+                            <div class="setting-desc">使用加密技术保护您的个人数据</div>
+                        </div>
+                        <div class="toggle-switch active" data-setting="dataEncryption">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">匿名统计</div>
+                            <div class="setting-desc">参与匿名使用统计，帮助改进产品</div>
+                        </div>
+                        <div class="toggle-switch active" data-setting="anonymousStats">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-section">
+                    <div class="section-title">
+                        🛡️ 安全设置
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">自动锁定</div>
+                            <div class="setting-desc">长时间无操作后自动锁定应用</div>
+                        </div>
+                        <div class="toggle-switch" data-setting="autoLock">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">会话超时时间</label>
+                        <select class="form-select">
+                            <option value="15">15分钟</option>
+                            <option value="30" selected>30分钟</option>
+                            <option value="60">1小时</option>
+                            <option value="0">不自动退出</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="save-btn" onclick="savePrivacySettings()">保存设置</button>
+            </div>
+
+            <!-- 数据管理面板 -->
+            <div class="settings-content panel" id="dataPanel">
+                <div class="setting-section">
+                    <div class="section-title">
+                        💾 数据备份
+                    </div>
+
+                    <div class="backup-section">
+                        <div class="backup-item" onclick="backupData()">
+                            <div class="backup-icon">📦</div>
+                            <div>备份所有数据</div>
+                        </div>
+
+                        <div class="backup-item" onclick="importData()">
+                            <div class="backup-icon">📥</div>
+                            <div>导入备份数据</div>
+                        </div>
+
+                        <div class="backup-item" onclick="exportData()">
+                            <div class="backup-icon">📤</div>
+                            <div>导出为文件</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-section">
+                    <div class="section-title">
+                        🗂️ 存储管理
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">本地存储空间</div>
+                            <div class="setting-desc">已使用 2.3MB / 可用空间 10MB</div>
+                        </div>
+                        <button style="padding: 0.5rem 1rem; border: none; border-radius: 6px; background: #f0f0f0;"
+                            onclick="clearCache()">清理缓存</button>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-title">自动清理</div>
+                            <div class="setting-desc">定期清理过期的临时数据</div>
+                        </div>
+                        <div class="toggle-switch active" data-setting="autoCleanup">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="danger-zone">
+                    <div class="danger-title">
+                        ⚠️ 危险操作
+                    </div>
+                    <p style="color: #666; margin-bottom: 1rem;">
+                        以下操作将永久删除您的数据，请谨慎操作。建议在执行前先备份数据。
+                    </p>
+                    <div class="danger-buttons">
+                        <button class="btn-danger" onclick="resetAllData()">重置所有数据</button>
+                        <button class="btn-danger" onclick="deleteAccount()">删除账户</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>个人中心</h4>
+                <ul>
+                    <li><a href="profile.html">个人资料</a></li>
+                    <li><a href="dashboard.html">数据概览</a></li>
+                    <li><a href="settings.html">系统设置</a></li>
+                    <li><a href="account-security.html">账户安全</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 LifeSync. 保留所有权利。由无暗创作。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+
+</html>

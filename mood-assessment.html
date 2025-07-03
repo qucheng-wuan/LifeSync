@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情绪健康评估 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .assessment-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .assessment-header {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .assessment-nav {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item.active {
+            background: #74b9ff;
+            color: white;
+        }
+
+        .assessment-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .question-counter {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .question-card {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .question-card.current {
+            border-color: #74b9ff;
+            background: #f8fcff;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option-item {
+            padding: 1rem 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .option-item:hover {
+            border-color: #74b9ff;
+            background: #f8fcff;
+        }
+
+        .option-item.selected {
+            border-color: #74b9ff;
+            background: #74b9ff;
+            color: white;
+        }
+
+        .scale-options {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+        }
+
+        .scale-item {
+            text-align: center;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scale-item:hover {
+            border-color: #74b9ff;
+        }
+
+        .scale-item.selected {
+            background: #74b9ff;
+            color: white;
+            border-color: #74b9ff;
+        }
+
+        .scale-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .scale-label {
+            font-size: 0.8rem;
+        }
+
+        .navigation-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #74b9ff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results-panel {
+            display: none;
+        }
+
+        .results-panel.active {
+            display: block;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 100%);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .total-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-category {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2d3436;
+        }
+
+        .dimension-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dimension-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .dimension-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .dimension-score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #74b9ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .dimension-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dimension-fill {
+            height: 100%;
+            background: #74b9ff;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .recommendations-section {
+            background: #fff3cd;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .recommendation-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .recommendation-content h4 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .recommendation-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: #74b9ff;
+        }
+
+        .progress-dot.completed {
+            background: #00cec9;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                        <li><a href="mood-trends.html">趋势报告</a></li>
+                        <li><a href="mood-assessment.html">健康评估</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">心情日记</a></span>
+            <span class="separator">›</span>
+            <span class="current">健康评估</span>
+        </div>
+
+        <div class="assessment-container">
+            <div class="assessment-header">
+                <h1>🏥 情绪健康评估</h1>
+                <p>专业的心理健康自测，了解你的情绪状态</p>
+            </div>
+
+            <div class="assessment-nav">
+                <div class="nav-item active" data-tab="test">开始测试</div>
+                <div class="nav-item" data-tab="history">历史记录</div>
+                <div class="nav-item" data-tab="resources">健康资源</div>
+            </div>
+
+            <div class="assessment-content" id="testPanel">
+                <div class="progress-indicator" id="progressIndicator">
+                    <!-- 由JavaScript生成 -->
+                </div>
+
+                <div class="question-counter">
+                    <span id="currentQuestion">1</span> / <span id="totalQuestions">15</span>
+                </div>
+
+                <div id="questionsContainer">
+                    <!-- 问题将由JavaScript动态生成 -->
+                </div>
+
+                <div class="navigation-btns">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>上一题</button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>下一题</button>
+                </div>
+            </div>
+
+            <div class="assessment-content results-panel" id="resultsPanel">
+                <div class="score-display">
+                    <div class="total-score" id="totalScore">85</div>
+                    <div class="score-category" id="scoreCategory">情绪健康状态良好</div>
+                </div>
+
+                <div class="dimension-scores">
+                    <div class="dimension-card">
+                        <div class="dimension-name">情绪稳定性</div>
+                        <div class="dimension-score">82</div>
+                        <div class="dimension-bar">
+                            <div class="dimension-fill" style="width: 82%"></div>
+                        </div>
+                    </div>
+
+                    <div class="dimension-card">
+                        <div class="dimension-name">压力管理</div>
+                        <div class="dimension-score">78</div>
+                        <div class="dimension-bar">
+                            <div class="dimension-fill" style="width: 78%"></div>
+                        </div>
+                    </div>
+
+                    <div class="dimension-card">
+                        <div class="dimension-name">自我觉察</div>
+                        <div class="dimension-score">88</div>
+                        <div class="dimension-bar">
+                            <div class="dimension-fill" style="width: 88%"></div>
+                        </div>
+                    </div>
+
+                    <div class="dimension-card">
+                        <div class="dimension-name">社交情绪</div>
+                        <div class="dimension-score">85</div>
+                        <div class="dimension-bar">
+                            <div class="dimension-fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recommendations-section">
+                    <h3>💡 个性化建议</h3>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">🧘‍♀️</div>
+                        <div class="recommendation-content">
+                            <h4>压力管理提升</h4>
+                            <p>你的压力管理得分为78分，建议尝试深呼吸练习和正念冥想来提升抗压能力。</p>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">💪</div>
+                        <div class="recommendation-content">
+                            <h4>保持优势</h4>
+                            <p>你的自我觉察能力很强（88分），继续保持情绪记录的习惯有助于进一步提升。</p>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">👥</div>
+                        <div class="recommendation-content">
+                            <h4>社交支持</h4>
+                            <p>维持良好的社交关系，定期与朋友和家人分享感受，这对情绪健康很重要。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" onclick="location.reload()">重新测试</button>
+                    <button class="btn btn-secondary" onclick="location.href='mood-diary.html'">开始记录</button>
+                </div>
+            </div>
+
+            <div class="assessment-content" id="historyPanel" style="display: none;">
+                <h3>测试历史</h3>
+                <p>这里将显示你的历史测试记录和分数变化趋势。</p>
+            </div>
+
+            <div class="assessment-content" id="resourcesPanel" style="display: none;">
+                <h3>健康资源</h3>
+                <p>提供心理健康相关的文章、视频和专业帮助信息。</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>心情日记</h4>
+                <ul>
+                    <li><a href="mood-diary.html">心情记录</a></li>
+                    <li><a href="mood-analysis.html">情绪分析</a></li>
+                    <li><a href="mood-insights.html">心理洞察</a></li>
+                    <li><a href="mood-calendar.html">心情日历</a></li>
+                    <li><a href="mood-trends.html">趋势报告</a></li>
+                    <li><a href="mood-assessment.html">健康评估</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/mood-assessment.js"></script>
+</body>
+
+</html>

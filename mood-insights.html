@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心理洞察 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .insights-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .insights-header {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #2d3436;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .insight-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .insight-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .insight-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .insight-content {
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .suggestion-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .suggestion-item {
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">心情日记</a></span>
+            <span class="separator">›</span>
+            <span class="current">心理洞察</span>
+        </div>
+
+        <div class="insights-container">
+            <div class="insights-header">
+                <h1>💡 心理洞察</h1>
+                <p>基于AI分析，为你提供个性化的情绪管理建议</p>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-icon">🎯</div>
+                <div class="insight-title">情绪模式分析</div>
+                <div class="insight-content">
+                    根据你近期的心情记录，发现你在工作日的情绪波动较大，特别是周一和周五。建议在这些时间点进行额外的情绪调节活动。
+                </div>
+                <ul class="suggestion-list">
+                    <li class="suggestion-item">
+                        <span>🧘‍♀️</span>
+                        <span>周一早晨进行10分钟冥想</span>
+                    </li>
+                    <li class="suggestion-item">
+                        <span>☕</span>
+                        <span>周五下午安排放松时间</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-icon">🌈</div>
+                <div class="insight-title">积极情绪培养</div>
+                <div class="insight-content">
+                    你的积极情绪占比为85%，表现很好！为了维持这种良好状态，建议继续保持以下习惯：
+                </div>
+                <ul class="suggestion-list">
+                    <li class="suggestion-item">
+                        <span>📚</span>
+                        <span>保持每日阅读习惯</span>
+                    </li>
+                    <li class="suggestion-item">
+                        <span>🏃‍♂️</span>
+                        <span>坚持规律运动</span>
+                    </li>
+                    <li class="suggestion-item">
+                        <span>👥</span>
+                        <span>多与朋友交流互动</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-icon">⚡</div>
+                <div class="insight-title">压力管理建议</div>
+                <div class="insight-content">
+                    当你感到压力时，通常伴随着"工作"和"deadline"相关的标签。以下方法可以帮助你更好地管理压力：
+                </div>
+                <ul class="suggestion-list">
+                    <li class="suggestion-item">
+                        <span>⏰</span>
+                        <span>使用番茄工作法分解任务</span>
+                    </li>
+                    <li class="suggestion-item">
+                        <span>📝</span>
+                        <span>写下担忧清单，逐一解决</span>
+                    </li>
+                    <li class="suggestion-item">
+                        <span>🎵</span>
+                        <span>聆听舒缓音乐放松心情</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="progress-section">
+                <h3>情绪管理进展</h3>
+                <div class="progress-item">
+                    <span>情绪稳定性</span>
+                    <div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                        <span style="margin-left: 1rem;">75%</span>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <span>积极心态</span>
+                    <div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                        <span style="margin-left: 1rem;">85%</span>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <span>压力应对</span>
+                    <div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 68%"></div>
+                        </div>
+                        <span style="margin-left: 1rem;">68%</span>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <span>自我觉察</span>
+                    <div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 82%"></div>
+                        </div>
+                        <span style="margin-left: 1rem;">82%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-icon">🔮</div>
+                <div class="insight-title">未来趋势预测</div>
+                <div class="insight-content">
+                    基于你的情绪变化模式，预测未来一周你可能在周三会感到较为疲惫，建议提前安排轻松的活动。
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>心情日记</h4>
+                <ul>
+                    <li><a href="mood-diary.html">心情记录</a></li>
+                    <li><a href="mood-analysis.html">情绪分析</a></li>
+                    <li><a href="mood-insights.html">心理洞察</a></li>
+                    <li><a href="mood-calendar.html">心情日历</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/mood-insights.js"></script>
+</body>
+
+</html>

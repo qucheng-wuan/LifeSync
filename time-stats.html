@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间使用统计分析 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-header {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .period-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .period-btn {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .period-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .overview-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .overview-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .overview-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .overview-change {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .overview-change.positive {
+            color: #28a745;
+        }
+
+        .overview-change.negative {
+            color: #dc3545;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .activity-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .activity-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .activity-details h4 {
+            margin: 0 0 0.2rem 0;
+            color: #333;
+        }
+
+        .activity-details p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            text-align: right;
+        }
+
+        .activity-duration {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .detailed-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .stats-table th,
+        .stats-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stats-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .insights-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .insight-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .insight-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .insight-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .period-selector {
+                flex-wrap: wrap;
+            }
+
+            .overview-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habit-detail.html">习惯详情</a></li>
+                        <li><a href="habit-tracker.html">习惯追踪</a></li>
+                        <li><a href="habit-analytics.html">习惯分析</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">时间管理</a></span>
+            <span class="separator">›</span>
+            <span class="current">时间使用统计分析</span>
+        </div>
+
+        <div class="stats-container">
+            <div class="stats-header">
+                <h1>时间使用统计分析</h1>
+                <p>深入了解您的时间分配模式，优化生产力</p>
+                <div class="period-selector">
+                    <button class="period-btn" data-period="today">今天</button>
+                    <button class="period-btn active" data-period="week">本周</button>
+                    <button class="period-btn" data-period="month">本月</button>
+                    <button class="period-btn" data-period="year">今年</button>
+                </div>
+            </div>
+
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="overview-value" id="totalTime">42.5</div>
+                    <div class="overview-label">总工作时间(小时)</div>
+                    <div class="overview-change positive">+2.3h vs 上周</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-value" id="focusTime">28.2</div>
+                    <div class="overview-label">专注时间(小时)</div>
+                    <div class="overview-change positive">+1.8h vs 上周</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-value" id="efficiency">66%</div>
+                    <div class="overview-label">工作效率</div>
+                    <div class="overview-change positive">+4% vs 上周</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-value" id="breakTime">14.3</div>
+                    <div class="overview-label">休息时间(小时)</div>
+                    <div class="overview-change negative">-0.5h vs 上周</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-section">
+                    <h3 class="chart-title">每日时间分布趋势</h3>
+                    <div class="chart-placeholder" id="timeChart">
+                        📊 时间趋势图表
+                    </div>
+                </div>
+                <div class="chart-section">
+                    <h3 class="chart-title">活动类型分布</h3>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-info">
+                                <div class="activity-icon" style="background: #667eea; color: white;">💼</div>
+                                <div class="activity-details">
+                                    <h4>工作项目</h4>
+                                    <p>编程开发、会议讨论</p>
+                                </div>
+                            </div>
+                            <div class="activity-time">
+                                <div class="activity-duration">6.5h</div>
+                                <div>38%</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-info">
+                                <div class="activity-icon" style="background: #28a745; color: white;">📚</div>
+                                <div class="activity-details">
+                                    <h4>学习充电</h4>
+                                    <p>技术文档、在线课程</p>
+                                </div>
+                            </div>
+                            <div class="activity-time">
+                                <div class="activity-duration">3.2h</div>
+                                <div>19%</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-info">
+                                <div class="activity-icon" style="background: #ffc107; color: white;">🏃</div>
+                                <div class="activity-details">
+                                    <h4>运动健身</h4>
+                                    <p>跑步、力量训练</p>
+                                </div>
+                            </div>
+                            <div class="activity-time">
+                                <div class="activity-duration">2.1h</div>
+                                <div>12%</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-info">
+                                <div class="activity-icon" style="background: #dc3545; color: white;">🎮</div>
+                                <div class="activity-details">
+                                    <h4>娱乐放松</h4>
+                                    <p>游戏、看剧</p>
+                                </div>
+                            </div>
+                            <div class="activity-time">
+                                <div class="activity-duration">2.8h</div>
+                                <div>16%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detailed-stats">
+                <div class="chart-section">
+                    <h3 class="chart-title">每周效率对比</h3>
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>工作时间</th>
+                                <th>效率评分</th>
+                                <th>完成任务</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>周一</td>
+                                <td>8.5h</td>
+                                <td>85%</td>
+                                <td>6/8</td>
+                            </tr>
+                            <tr>
+                                <td>周二</td>
+                                <td>7.2h</td>
+                                <td>72%</td>
+                                <td>4/6</td>
+                            </tr>
+                            <tr>
+                                <td>周三</td>
+                                <td>9.1h</td>
+                                <td>91%</td>
+                                <td>8/9</td>
+                            </tr>
+                            <tr>
+                                <td>周四</td>
+                                <td>6.8h</td>
+                                <td>68%</td>
+                                <td>5/7</td>
+                            </tr>
+                            <tr>
+                                <td>周五</td>
+                                <td>7.9h</td>
+                                <td>79%</td>
+                                <td>6/8</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="chart-section">
+                    <h3 class="chart-title">目标达成情况</h3>
+                    <div style="margin-top: 1rem;">
+                        <div style="margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>每日工作时间目标</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>专注时间占比</span>
+                                <span>72%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 72%;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>任务完成率</span>
+                                <span>78%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 78%;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>学习时间目标</span>
+                                <span>60%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insights-section">
+                <h3>智能洞察与建议</h3>
+                <div class="insight-item">
+                    <div class="insight-title">🎯 效率最高时段</div>
+                    <div class="insight-description">
+                        您在上午9-11点的工作效率最高，平均效率达到92%。建议将重要任务安排在此时段完成。
+                    </div>
+                </div>
+                <div class="insight-item">
+                    <div class="insight-title">⚠️ 分心时段分析</div>
+                    <div class="insight-description">
+                        下午2-4点是您容易分心的时段，建议安排轻松的任务或适当休息，避免重要工作安排在此时。
+                    </div>
+                </div>
+                <div class="insight-item">
+                    <div class="insight-title">📈 周期性模式</div>
+                    <div class="insight-description">
+                        您的工作效率呈现明显的周期性：周一、周三效率较高，周二、周四相对较低。建议合理调配任务难度。
+                    </div>
+                </div>
+                <div class="insight-item">
+                    <div class="insight-title">💡 优化建议</div>
+                    <div class="insight-description">
+                        建议增加番茄钟使用频率，现有数据显示使用番茄钟时的专注度比平时高35%。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>时间管理</h4>
+                <ul>
+                    <li><a href="pomodoro.html">番茄钟</a></li>
+                    <li><a href="calendar.html">日程安排</a></li>
+                    <li><a href="time-stats.html">时间统计</a></li>
+                    <li><a href="focus-history.html">专注记录</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/time-stats.js"></script>
+</body>
+
+</html>

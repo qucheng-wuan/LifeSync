@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeSync - 个人数字生活管理平台</title>
+    <meta name="description" content="现代化个人数字生活管理平台，灵感来自优秀设计，助力高效生活">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/modern-index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- 现代导航栏 -->
+    <nav class="modern-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">LifeSync</span>
+                </a>
+            </div>
+
+            <div class="nav-menu" id="navMenu">
+                <a href="#nominees" class="nav-link">精选功能</a>
+                <a href="#winners" class="nav-link">成功案例</a>
+                <a href="#collections" class="nav-link">功能集合</a>
+                <a href="#directory" class="nav-link">用户目录</a>
+                <a href="#marketplace" class="nav-link">模板市场</a>
+                <div class="nav-auth">
+                    <a href="login.html" class="btn btn-outline">登录</a>
+                    <a href="dashboard.html" class="btn btn-primary">开始使用</a>
+                </div>
+            </div>
+
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-text">🏆 2025年度最佳生活管理平台</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="title-line">重新定义</span>
+                    <span class="title-line gradient-text">数字生活管理</span>
+                </h1>
+                <p class="hero-description">
+                    融合最新设计理念与先进技术，为您打造前所未有的个人数字化生活体验。
+                    从时间管理到情感记录，让每一天都充满意义。
+                </p>
+                <div class="hero-actions">
+                    <a href="dashboard.html" class="btn btn-hero-primary">
+                        <span>立即体验</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#showcase" class="btn btn-hero-secondary">
+                        <i class="fas fa-play"></i>
+                        <span>观看演示</span>
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">活跃用户</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">98%</span>
+                        <span class="stat-label">满意度</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">全天候支持</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="visual-container">
+                    <div class="floating-card card-1">
+                        <div class="card-header">时间管理</div>
+                        <div class="card-content">番茄钟专注技术</div>
+                    </div>
+                    <div class="floating-card card-2">
+                        <div class="card-header">习惯养成</div>
+                        <div class="card-content">科学打卡系统</div>
+                    </div>
+                    <div class="floating-card card-3">
+                        <div class="card-header">心情日记</div>
+                        <div class="card-content">AI情感分析</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 每日精选区域 -->
+    <section class="nominees-section" id="nominees">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">今日精选功能</h2>
+                <p class="section-subtitle">发现最受用户喜爱的生活管理工具</p>
+            </div>
+            <div class="nominees-grid">
+                <div class="nominee-card">
+                    <div class="card-image">
+                        <div class="placeholder-image pomodoro-bg">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="card-overlay">
+                            <a href="pomodoro.html" class="overlay-btn">立即体验</a>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="category">时间管理</span>
+                            <span class="votes">1,234 票</span>
+                        </div>
+                        <h3 class="card-title">智能番茄钟</h3>
+                        <p class="card-description">基于科学研究的专注计时器，帮助提升工作效率</p>
+                        <div class="card-footer">
+                            <div class="creator">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSI4IiB5PSI4Ij4KPHBhdGggZD0iTTggMTJMMTIgOEw4IDRWMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+"
+                                    alt="Creator" class="creator-avatar">
+                                <span class="creator-name">LifeSync Team</span>
+                            </div>
+                            <button class="vote-btn">
+                                <i class="fas fa-heart"></i>
+                                <span>投票</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nominee-card">
+                    <div class="card-image">
+                        <div class="placeholder-image habits-bg">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="card-overlay">
+                            <a href="habits.html" class="overlay-btn">立即体验</a>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="category">习惯养成</span>
+                            <span class="votes">987 票</span>
+                        </div>
+                        <h3 class="card-title">智能习惯追踪</h3>
+                        <p class="card-description">科学的习惯养成系统，让好习惯成为自然</p>
+                        <div class="card-footer">
+                            <div class="creator">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiMxMGFjODQiLz4KPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSI4IiB5PSI4Ij4KPHBhdGggZD0iTTggMTJMMTIgOEw4IDRWMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+"
+                                    alt="Creator" class="creator-avatar">
+                                <span class="creator-name">LifeSync Team</span>
+                            </div>
+                            <button class="vote-btn">
+                                <i class="fas fa-heart"></i>
+                                <span>投票</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nominee-card">
+                    <div class="card-image">
+                        <div class="placeholder-image mood-bg">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <div class="card-overlay">
+                            <a href="mood-diary.html" class="overlay-btn">立即体验</a>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="category">心理健康</span>
+                            <span class="votes">756 票</span>
+                        </div>
+                        <h3 class="card-title">AI心情分析</h3>
+                        <p class="card-description">智能情感记录与分析，关爱心理健康</p>
+                        <div class="card-footer">
+                            <div class="creator">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNmZjc1OGMiLz4KPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSI4IiB5PSI4Ij4KPHBhdGggZD0iTTggMTJMMTIgOEw4IDRWMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+"
+                                    alt="Creator" class="creator-avatar">
+                                <span class="creator-name">LifeSync Team</span>
+                            </div>
+                            <button class="vote-btn">
+                                <i class="fas fa-heart"></i>
+                                <span>投票</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nominee-card">
+                    <div class="card-image">
+                        <div class="placeholder-image goals-bg">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="card-overlay">
+                            <a href="goals.html" class="overlay-btn">立即体验</a>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="category">目标管理</span>
+                            <span class="votes">892 票</span>
+                        </div>
+                        <h3 class="card-title">智能目标规划</h3>
+                        <p class="card-description">SMART目标设定与进度追踪，让梦想照进现实</p>
+                        <div class="card-footer">
+                            <div class="creator">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNmZjlmNDMiLz4KPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSI4IiB5PSI4Ij4KPHBhdGggZD0iTTggMTJMMTIgOEw4IDRWMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+"
+                                    alt="Creator" class="creator-avatar">
+                                <span class="creator-name">LifeSync Team</span>
+                            </div>
+                            <button class="vote-btn">
+                                <i class="fas fa-heart"></i>
+                                <span>投票</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nominee-card">
+                    <div class="card-image">
+                        <div class="placeholder-image calendar-bg">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="card-overlay">
+                            <a href="calendar.html" class="overlay-btn">立即体验</a>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="category">日程管理</span>
+                            <span class="votes">654 票</span>
+                        </div>
+                        <h3 class="card-title">智能日程安排</h3>
+                        <p class="card-description">AI驱动的日程规划，自动优化时间安排</p>
+                        <div class="card-footer">
+                            <div class="creator">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiMzNzQyZmEiLz4KPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSI4IiB5PSI4Ij4KPHBhdGggZD0iTTggMTJMMTIgOEw4IDRWMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+"
+                                    alt="Creator" class="creator-avatar">
+                                <span class="creator-name">LifeSync Team</span>
+                            </div>
+                            <button class="vote-btn">
+                                <i class="fas fa-heart"></i>
+                                <span>投票</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nominee-card">
+                    <div class="card-image">
+                        <div class="placeholder-image dashboard-bg">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-overlay">
+                            <a href="dashboard.html" class="overlay-btn">立即体验</a>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="category">数据分析</span>
+                            <span class="votes">523 票</span>
+                        </div>
+                        <h3 class="card-title">数据洞察仪表盘</h3>
+                        <p class="card-description">可视化数据分析，全面了解生活管理效果</p>
+                        <div class="card-footer">
+                            <div class="creator">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNlNzQzZmYiLz4KPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSI4IiB5PSI4Ij4KPHBhdGggZD0iTTggMTJMMTIgOEw4IDRWMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+"
+                                    alt="Creator" class="creator-avatar">
+                                <span class="creator-name">LifeSync Team</span>
+                            </div>
+                            <button class="vote-btn">
+                                <i class="fas fa-heart"></i>
+                                <span>投票</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 成功案例区域 -->
+    <section class="winners-section" id="winners">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">用户成功案例</h2>
+                <p class="section-subtitle">看看其他用户如何通过 LifeSync 改变生活</p>
+            </div>
+            <div class="winners-grid">
+                <div class="winner-card">
+                    <div class="winner-badge">🏆 年度最佳</div>
+                    <div class="winner-content">
+                        <h3>90天习惯养成挑战</h3>
+                        <p>"通过LifeSync，我成功坚持了90天的早起习惯，现在我的生活完全改变了"</p>
+                        <div class="winner-profile">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM0ZjQ2ZTUiLz4KPHRleHQgeD0iMjAiIHk9IjI2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNjAwIj7mnY48L3RleHQ+Cjwvc3ZnPg=="
+                                alt="User" class="winner-avatar">
+                            <div class="winner-info">
+                                <span class="winner-name">李小明</span>
+                                <span class="winner-title">产品经理</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="winner-card">
+                    <div class="winner-badge">🌟 用户之选</div>
+                    <div class="winner-content">
+                        <h3>时间管理大师</h3>
+                        <p>"番茄钟功能帮我提升了300%的工作效率，现在我有更多时间陪伴家人"</p>
+                        <div class="winner-profile">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNlZjQ0NDQiLz4KPHRleHQgeD0iMjAiIHk9IjI2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNjAwIj7nhoo8L3RleHQ+Cjwvc3ZnPg=="
+                                alt="User" class="winner-avatar">
+                            <div class="winner-info">
+                                <span class="winner-name">王美丽</span>
+                                <span class="winner-title">设计师</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="winner-card">
+                    <div class="winner-badge">💫 突破奖</div>
+                    <div class="winner-content">
+                        <h3>心理健康守护者</h3>
+                        <p>"心情日记功能让我更了解自己，现在我能更好地管理情绪和压力"</p>
+                        <div class="winner-profile">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMyZGQ0YmYiLz4KPHRleHQgeD0iMjAiIHk9IjI2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNjAwIj7lvKA8L3RleHQ+Cjwvc3ZnPg=="
+                                alt="User" class="winner-avatar">
+                            <div class="winner-info">
+                                <span class="winner-name">张启航</span>
+                                <span class="winner-title">学生</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能集合区域 -->
+    <section class="collections-section" id="collections">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">功能集合</h2>
+                <p class="section-subtitle">探索完整的生活管理解决方案</p>
+            </div>
+            <div class="collections-grid">
+                <div class="collection-card">
+                    <div class="collection-header">
+                        <h3>时间管理套件</h3>
+                        <span class="collection-count">5 个工具</span>
+                    </div>
+                    <div class="collection-preview">
+                        <div class="preview-item">
+                            <i class="fas fa-clock"></i>
+                            <span>番茄钟</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>日程安排</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>时间统计</span>
+                        </div>
+                    </div>
+                    <a href="pomodoro.html" class="collection-link">探索时间管理 →</a>
+                </div>
+
+                <div class="collection-card">
+                    <div class="collection-header">
+                        <h3>习惯养成系统</h3>
+                        <span class="collection-count">4 个工具</span>
+                    </div>
+                    <div class="collection-preview">
+                        <div class="preview-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>习惯打卡</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-trophy"></i>
+                            <span>成就系统</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>习惯统计</span>
+                        </div>
+                    </div>
+                    <a href="habits.html" class="collection-link">探索习惯养成 →</a>
+                </div>
+
+                <div class="collection-card">
+                    <div class="collection-header">
+                        <h3>心理健康中心</h3>
+                        <span class="collection-count">4 个工具</span>
+                    </div>
+                    <div class="collection-preview">
+                        <div class="preview-item">
+                            <i class="fas fa-smile"></i>
+                            <span>心情记录</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-brain"></i>
+                            <span>AI分析</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>心情日历</span>
+                        </div>
+                    </div>
+                    <a href="mood-diary.html" class="collection-link">探索心理健康 →</a>
+                </div>
+
+                <div class="collection-card">
+                    <div class="collection-header">
+                        <h3>目标管理工具</h3>
+                        <span class="collection-count">3 个工具</span>
+                    </div>
+                    <div class="collection-preview">
+                        <div class="preview-item">
+                            <i class="fas fa-bullseye"></i>
+                            <span>目标设定</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-tasks"></i>
+                            <span>进度追踪</span>
+                        </div>
+                        <div class="preview-item">
+                            <i class="fas fa-medal"></i>
+                            <span>里程碑</span>
+                        </div>
+                    </div>
+                    <a href="goals.html" class="collection-link">探索目标管理 →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户目录区域 -->
+    <section class="directory-section" id="directory">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">用户目录</h2>
+                <p class="section-subtitle">连接志同道合的用户，分享生活管理经验</p>
+            </div>
+            <div class="directory-filters">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="productivity">效率专家</button>
+                <button class="filter-btn" data-filter="wellness">健康达人</button>
+                <button class="filter-btn" data-filter="students">学生群体</button>
+                <button class="filter-btn" data-filter="professionals">职场精英</button>
+            </div>
+            <div class="directory-grid">
+                <div class="directory-card" data-category="productivity">
+                    <div class="user-avatar">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMzAiIGZpbGw9IiM4YjVjZjYiLz4KPHRleHQgeD0iMzAiIHk9IjM3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNjAwIj7mnY48L3RleHQ+Cjwvc3ZnPg=="
+                            alt="User">
+                        <div class="user-status online"></div>
+                    </div>
+                    <div class="user-info">
+                        <h4 class="user-name">李效率</h4>
+                        <p class="user-title">产品经理 · 效率专家</p>
+                        <p class="user-description">分享时间管理和效率提升的实用技巧</p>
+                        <div class="user-tags">
+                            <span class="tag">时间管理</span>
+                            <span class="tag">GTD</span>
+                        </div>
+                    </div>
+                    <button class="follow-btn">关注</button>
+                </div>
+
+                <div class="directory-card" data-category="wellness">
+                    <div class="user-avatar">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMzAiIGZpbGw9IiMwNmI2ZDQiLz4KPHRleHQgeD0iMzAiIHk9IjM3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNjAwIj7nhoo8L3RleHQ+Cjwvc3ZnPg=="
+                            alt="User">
+                        <div class="user-status online"></div>
+                    </div>
+                    <div class="user-info">
+                        <h4 class="user-name">王健康</h4>
+                        <p class="user-title">瑜伽教练 · 健康达人</p>
+                        <p class="user-description">专注身心健康，分享冥想和正念练习</p>
+                        <div class="user-tags">
+                            <span class="tag">健康</span>
+                            <span class="tag">冥想</span>
+                        </div>
+                    </div>
+                    <button class="follow-btn">关注</button>
+                </div>
+
+                <div class="directory-card" data-category="students">
+                    <div class="user-avatar">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMzAiIGZpbGw9IiNmNTk3MzEiLz4KPHRleHQgeD0iMzAiIHk9IjM3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNjAwIj7lvKA8L3RleHQ+Cjwvc3ZnPg=="
+                            alt="User">
+                        <div class="user-status away"></div>
+                    </div>
+                    <div class="user-info">
+                        <h4 class="user-name">张学霸</h4>
+                        <p class="user-title">大学生 · 学习达人</p>
+                        <p class="user-description">分享学习方法和考试技巧</p>
+                        <div class="user-tags">
+                            <span class="tag">学习</span>
+                            <span class="tag">考试</span>
+                        </div>
+                    </div>
+                    <button class="follow-btn">关注</button>
+                </div>
+
+                <div class="directory-card" data-category="professionals">
+                    <div class="user-avatar">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMzAiIGZpbGw9IiNkYzI2MjYiLz4KPHRleHQgeD0iMzAiIHk9IjM3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkludGVyIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNjAwIj7pmYg8L3RleHQ+Cjwvc3ZnPg=="
+                            alt="User">
+                        <div class="user-status online"></div>
+                    </div>
+                    <div class="user-info">
+                        <h4 class="user-name">陈职场</h4>
+                        <p class="user-title">技术总监 · 职场精英</p>
+                        <p class="user-description">分享职场发展和团队管理经验</p>
+                        <div class="user-tags">
+                            <span class="tag">职场</span>
+                            <span class="tag">管理</span>
+                        </div>
+                    </div>
+                    <button class="follow-btn">关注</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 模板市场区域 -->
+    <section class="marketplace-section" id="marketplace">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">模板市场</h2>
+                <p class="section-subtitle">发现精选的生活管理模板和工具</p>
+            </div>
+            <div class="marketplace-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="placeholder-image template-bg">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="product-price">¥29</div>
+                    </div>
+                    <div class="product-content">
+                        <h4 class="product-title">专业时间管理模板</h4>
+                        <p class="product-description">包含番茄钟、日程规划等完整时间管理方案</p>
+                        <div class="product-meta">
+                            <span class="rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.9</span>
+                            </span>
+                            <span class="downloads">1.2k 下载</span>
+                        </div>
+                        <button class="product-btn">立即购买</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="placeholder-image habits-template-bg">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="product-price">¥19</div>
+                    </div>
+                    <div class="product-content">
+                        <h4 class="product-title">习惯追踪器模板</h4>
+                        <p class="product-description">科学的习惯养成计划，助您建立良好生活习惯</p>
+                        <div class="product-meta">
+                            <span class="rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.8</span>
+                            </span>
+                            <span class="downloads">856 下载</span>
+                        </div>
+                        <button class="product-btn">立即购买</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="placeholder-image mood-template-bg">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="product-price">免费</div>
+                    </div>
+                    <div class="product-content">
+                        <h4 class="product-title">心情日记模板</h4>
+                        <p class="product-description">精美的情感记录模板，关爱心理健康</p>
+                        <div class="product-meta">
+                            <span class="rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.7</span>
+                            </span>
+                            <span class="downloads">2.3k 下载</span>
+                        </div>
+                        <button class="product-btn">免费下载</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="placeholder-image goals-template-bg">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="product-price">¥39</div>
+                    </div>
+                    <div class="product-content">
+                        <h4 class="product-title">目标管理大师包</h4>
+                        <p class="product-description">完整的目标设定、追踪和达成系统</p>
+                        <div class="product-meta">
+                            <span class="rating">
+                                <i class="fas fa-star"></i>
+                                <span>5.0</span>
+                            </span>
+                            <span class="downloads">645 下载</span>
+                        </div>
+                        <button class="product-btn">立即购买</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA 区域 -->
+    <section class="cta-section">
+        <div class="section-container">
+            <div class="cta-content">
+                <h2 class="cta-title">准备开始您的数字生活管理之旅？</h2>
+                <p class="cta-description">加入超过50,000名用户，体验更高效、更有意义的生活方式</p>
+                <div class="cta-actions">
+                    <a href="dashboard.html" class="btn btn-cta-primary">免费开始</a>
+                    <a href="login.html" class="btn btn-cta-secondary">立即登录</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 简洁页脚 - Awwwards 风格 -->
+    <footer class="awwwards-footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <p class="copyright">&copy; 2025 LifeSync. 保留所有权利.</p>
+                <p class="powered-by">由 <span class="highlight">AI技术</span> 驱动，为您提供智能化生活管理体验 | 由无暗创作</p>
+            </div>
+            <div class="footer-right">
+                <div class="social-icons">
+                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-icon"
+                        aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-icon"
+                        aria-label="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-icon"
+                        aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon"
+                        aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/modern-index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>习惯打卡页面 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .tracker-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tracker-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .date-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .date-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .date-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .date-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .progress-overview {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-ring-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-ring {
+            width: 150px;
+            height: 150px;
+            position: relative;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-percentage {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            line-height: 1;
+        }
+
+        .progress-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        .habits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .habit-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--habit-color, #667eea);
+        }
+
+        .habit-card.completed {
+            background: #f8fff9;
+            border: 2px solid #28a745;
+        }
+
+        .habit-card.completed::before {
+            background: #28a745;
+        }
+
+        .habit-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .habit-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            background: var(--habit-color, #667eea);
+            color: white;
+        }
+
+        .habit-details h3 {
+            margin: 0 0 0.3rem 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .habit-details p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .habit-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .streak-info {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .streak-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .check-button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .check-button:not(.completed) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .check-button.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .check-button .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .weekly-calendar {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+        }
+
+        .calendar-day {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        .calendar-day.today {
+            background: #667eea;
+            color: white;
+        }
+
+        .calendar-day.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-progress {
+            font-size: 0.8rem;
+        }
+
+        .motivational-quote {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #2d3436;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .quote-author {
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        .achievement-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            color: #333;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .date-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .calendar-grid {
+                gap: 0.5rem;
+            }
+
+            .calendar-day {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="search.html" class="nav-link">搜索</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">习惯养成</a></span>
+            <span class="separator">›</span>
+            <span class="current">习惯打卡页面</span>
+        </div>
+
+        <div class="tracker-container">
+            <div class="tracker-header">
+                <h1>今日习惯打卡</h1>
+                <p>每一次坚持，都是向更好自己的一步</p>
+                <div class="date-info">
+                    <div class="date-box">
+                        <div class="date-value" id="currentDate">15</div>
+                        <div class="date-label">今天</div>
+                    </div>
+                    <div class="date-box">
+                        <div class="date-value" id="weekDay">周一</div>
+                        <div class="date-label">星期</div>
+                    </div>
+                    <div class="date-box">
+                        <div class="date-value" id="monthYear">1月 2024</div>
+                        <div class="date-label">月份</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-overview">
+                <h3 style="text-align: center; margin-bottom: 1.5rem;">今日进度</h3>
+                <div class="progress-ring-container">
+                    <div class="progress-ring">
+                        <svg width="150" height="150">
+                            <circle cx="75" cy="75" r="65" stroke="#e0e0e0" stroke-width="8" fill="transparent" />
+                            <circle cx="75" cy="75" r="65" stroke="#667eea" stroke-width="8" fill="transparent"
+                                stroke-dasharray="408" stroke-dashoffset="245" id="progressCircle" />
+                        </svg>
+                        <div class="progress-text">
+                            <div class="progress-percentage" id="progressPercentage">67%</div>
+                            <div class="progress-label">已完成</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: #666;">
+                    已完成 <span id="completedCount">6</span> / <span id="totalCount">9</span> 个习惯
+                </div>
+            </div>
+
+            <div class="habits-grid" id="habitsGrid">
+                <!-- 习惯卡片将通过JavaScript动态生成 -->
+            </div>
+
+            <div class="weekly-calendar">
+                <div class="calendar-header">
+                    <button class="nav-btn" id="prevWeek">‹ 上周</button>
+                    <h3 id="weekRange">1月8日 - 1月14日</h3>
+                    <button class="nav-btn" id="nextWeek">下周 ›</button>
+                </div>
+                <div class="calendar-grid" id="weeklyGrid">
+                    <!-- 周历将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <div class="motivational-quote">
+                <div class="quote-text" id="quoteText">
+                    "成功是一个过程，不是一个事件。"
+                </div>
+                <div class="quote-author" id="quoteAuthor">— 托尼·罗宾斯</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 成就通知 -->
+    <div class="achievement-notification" id="achievementNotification">
+        <div>🏆 恭喜！您获得了新成就</div>
+        <div style="font-weight: bold; margin-top: 0.3rem;">连续打卡7天</div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>习惯养成</h4>
+                <ul>
+                    <li><a href="habits.html">习惯管理</a></li>
+                    <li><a href="habit-tracker.html">习惯打卡</a></li>
+                    <li><a href="achievements.html">成就徽章</a></li>
+                    <li><a href="habit-statistics.html">习惯统计</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/habit-tracker.js"></script>
+</body>
+
+</html>

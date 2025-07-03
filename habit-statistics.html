@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>习惯数据统计 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .time-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            margin-top: 1rem;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .habit-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .habit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="search.html" class="nav-link">搜索</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">习惯养成</a></span>
+            <span class="separator">›</span>
+            <span class="current">习惯数据统计</span>
+        </div>
+
+        <div class="stats-container">
+            <div class="stats-header">
+                <h1>📊 习惯数据统计</h1>
+                <p>数据驱动，让习惯养成更加科学高效</p>
+                <div class="time-filter">
+                    <button class="filter-btn" data-period="week">本周</button>
+                    <button class="filter-btn active" data-period="month">本月</button>
+                    <button class="filter-btn" data-period="quarter">本季度</button>
+                    <button class="filter-btn" data-period="year">今年</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">89%</div>
+                    <div>总完成率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">156</div>
+                    <div>总打卡次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">15</div>
+                    <div>最长连击</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div>活跃习惯数</div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h3>完成率趋势</h3>
+                <div class="chart-container">
+                    📈 趋势图表区域 (实际项目中会集成Chart.js等图表库)
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="chart-section">
+                    <h3>习惯分类统计</h3>
+                    <div class="chart-container">
+                        🥧 饼状图区域
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <h3>智能洞察</h3>
+                    <div class="insight-card">
+                        <h4>💡 本周亮点</h4>
+                        <p>您的"晨练"习惯表现优异，完成率达100%！建议保持当前节奏。</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>📈 改进建议</h4>
+                        <p>"阅读"习惯完成率偏低，建议调整时间安排或降低目标难度。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h3>习惯排行榜</h3>
+                <ul class="habit-list">
+                    <li class="habit-item">
+                        <span>🏃‍♂️ 晨练</span>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                            <small>100%</small>
+                        </div>
+                    </li>
+                    <li class="habit-item">
+                        <span>💧 喝水</span>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%"></div>
+                            </div>
+                            <small>95%</small>
+                        </div>
+                    </li>
+                    <li class="habit-item">
+                        <span>📚 阅读</span>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 78%"></div>
+                            </div>
+                            <small>78%</small>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>习惯养成</h4>
+                <ul>
+                    <li><a href="habits.html">习惯管理</a></li>
+                    <li><a href="habit-tracker.html">习惯打卡</a></li>
+                    <li><a href="achievements.html">成就徽章</a></li>
+                    <li><a href="habit-statistics.html">习惯统计</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/habit-statistics.js"></script>
+</body>
+
+</html>

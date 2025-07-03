@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄钟专注计时器 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .pomodoro-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .timer-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .timer-mode {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .control-btn.primary {
+            background: #ff6b6b;
+            border-color: #ff6b6b;
+        }
+
+        .control-btn.primary:hover {
+            background: #ff5252;
+        }
+
+        .progress-ring {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .progress-ring circle {
+            stroke-dasharray: 628;
+            stroke-dashoffset: 628;
+            transition: stroke-dashoffset 1s ease;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .settings-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .setting-group {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .setting-group h3 {
+            margin: 0 0 1rem 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .time-input {
+            width: 80px;
+            padding: 0.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            text-align: center;
+            margin: 0 0.5rem;
+        }
+
+        .music-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .music-option {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .music-option:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .music-option.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .task-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .task-list {
+            margin-top: 1rem;
+        }
+
+        .task-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .task-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .task-btn.delete {
+            background: #ff6b6b;
+        }
+
+        @media (max-width: 768px) {
+            .timer-display {
+                font-size: 2.5rem;
+            }
+
+            .timer-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habit-detail.html">习惯详情</a></li>
+                        <li><a href="habit-tracker.html">习惯追踪</a></li>
+                        <li><a href="habit-analytics.html">习惯分析</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">时间管理</a></span>
+            <span class="separator">›</span>
+            <span class="current">番茄钟专注计时器</span>
+        </div>
+
+        <div class="pomodoro-container">
+            <section class="timer-section">
+                <div class="timer-mode" id="currentMode">工作时间</div>
+
+                <div class="progress-ring">
+                    <svg width="200" height="200">
+                        <circle cx="100" cy="100" r="90" stroke="#ffffff" stroke-width="4" fill="transparent"
+                            opacity="0.3" />
+                        <circle cx="100" cy="100" r="90" stroke="#ffffff" stroke-width="8" fill="transparent"
+                            id="progressCircle" />
+                    </svg>
+                </div>
+
+                <div class="timer-display" id="timerDisplay">25:00</div>
+
+                <div class="timer-controls">
+                    <button class="control-btn primary" id="startBtn">开始</button>
+                    <button class="control-btn" id="pauseBtn">暂停</button>
+                    <button class="control-btn" id="resetBtn">重置</button>
+                    <button class="control-btn" id="skipBtn">跳过</button>
+                </div>
+            </section>
+
+            <section class="settings-panel">
+                <h2>番茄钟设置</h2>
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <h3>时间设置</h3>
+                        <p>
+                            工作时间: <input type="number" class="time-input" id="workTime" value="25" min="1" max="60"> 分钟
+                        </p>
+                        <p>
+                            短休息: <input type="number" class="time-input" id="shortBreak" value="5" min="1" max="30"> 分钟
+                        </p>
+                        <p>
+                            长休息: <input type="number" class="time-input" id="longBreak" value="15" min="5" max="60"> 分钟
+                        </p>
+                        <p>
+                            长休息间隔: <input type="number" class="time-input" id="longBreakInterval" value="4" min="2"
+                                max="10"> 个番茄钟
+                        </p>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>提醒设置</h3>
+                        <p>
+                            <input type="checkbox" id="soundAlert" checked> 声音提醒
+                        </p>
+                        <p>
+                            <input type="checkbox" id="desktopNotification" checked> 桌面通知
+                        </p>
+                        <p>
+                            <input type="checkbox" id="autoStart"> 自动开始下一阶段
+                        </p>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>背景音乐</h3>
+                        <div class="music-selector">
+                            <div class="music-option active" data-music="none">
+                                🔇<br>静音
+                            </div>
+                            <div class="music-option" data-music="rain">
+                                🌧️<br>雨声
+                            </div>
+                            <div class="music-option" data-music="forest">
+                                🌲<br>森林
+                            </div>
+                            <div class="music-option" data-music="cafe">
+                                ☕<br>咖啡厅
+                            </div>
+                            <div class="music-option" data-music="ocean">
+                                🌊<br>海浪
+                            </div>
+                            <div class="music-option" data-music="piano">
+                                🎹<br>钢琴
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>当前任务</h3>
+                        <input type="text" class="task-input" id="taskInput" placeholder="输入当前要专注的任务...">
+                        <button class="control-btn" onclick="addTask()">添加任务</button>
+                        <div class="task-list" id="taskList"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-section">
+                <h2>今日统计</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedPomodoros">0</div>
+                        <div class="stat-label">完成番茄钟</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalFocusTime">0</div>
+                        <div class="stat-label">专注时间(分钟)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedTasks">0</div>
+                        <div class="stat-label">完成任务</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalBreakTime">0</div>
+                        <div class="stat-label">休息时间(分钟)</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+                <div class="social-links">
+                    <a href="#" aria-label="微博">📱</a>
+                    <a href="#" aria-label="微信">💬</a>
+                    <a href="#" aria-label="QQ">🐧</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>时间管理</h4>
+                <ul>
+                    <li><a href="pomodoro.html">番茄钟</a></li>
+                    <li><a href="calendar.html">日程安排</a></li>
+                    <li><a href="time-stats.html">时间统计</a></li>
+                    <li><a href="focus-history.html">专注记录</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>习惯养成</h4>
+                <ul>
+                    <li><a href="habit-detail.html">习惯详情</a></li>
+                    <li><a href="habit-tracker.html">习惯追踪</a></li>
+                    <li><a href="habit-analytics.html">习惯分析</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>心情管理</h4>
+                <ul>
+                    <li><a href="mood-diary.html">心情日记</a></li>
+                    <li><a href="mood-analysis.html">情绪分析</a></li>
+                    <li><a href="mood-insights.html">心理洞察</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>目标追踪</h4>
+                <ul>
+                    <li><a href="goals.html">目标设定</a></li>
+                    <li><a href="goal-progress.html">进度追踪</a></li>
+                    <li><a href="achievements.html">成就展示</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/pomodoro.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账户安全 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .security-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .security-header {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .security-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .security-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .security-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-good {
+            background: #00b894;
+        }
+
+        .status-warning {
+            background: #fdcb6e;
+        }
+
+        .status-danger {
+            background: #e74c3c;
+        }
+
+        .password-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-input {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #e17055;
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .two-factor-section {
+            border: 2px dashed #e0e0e0;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .two-factor-enabled {
+            border-color: #00b894;
+            background: #f0fff9;
+        }
+
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            margin: 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .backup-codes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .backup-code {
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .login-history {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-device {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .history-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .history-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-current {
+            background: #00b894;
+            color: white;
+        }
+
+        .status-previous {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-primary {
+            background: #e17055;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #d63031;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #c0c0c0;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .security-tip {
+            background: #fff5f0;
+            border-left: 4px solid #e17055;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+        }
+
+        .tip-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #d63031;
+        }
+
+        .device-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .device-info {
+            flex: 1;
+        }
+
+        .device-name {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .device-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .backup-codes {
+                grid-template-columns: 1fr;
+            }
+
+            .history-item {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">LifeSync</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                        <li><a href="mood-trends.html">趋势报告</a></li>
+                        <li><a href="mood-assessment.html">健康评估</a></li>
+                        <li><a href="mood-training.html">情绪训练</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">个人中心 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="profile.html">个人资料</a></li>
+                        <li><a href="dashboard.html">数据概览</a></li>
+                        <li><a href="settings.html">系统设置</a></li>
+                        <li><a href="account-security.html">账户安全</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">个人中心</a></span>
+            <span class="separator">›</span>
+            <span class="current">账户安全</span>
+        </div>
+
+        <div class="security-container">
+            <div class="security-header">
+                <h1>🔒 账户安全</h1>
+                <p>保护你的账户和数据安全</p>
+            </div>
+
+            <div class="security-grid">
+                <!-- 安全状态概览 -->
+                <div class="security-card">
+                    <div class="card-title">
+                        🛡️ 安全状态
+                    </div>
+
+                    <div class="security-status">
+                        <div class="status-indicator status-good"></div>
+                        <div>
+                            <strong>账户安全等级：良好</strong>
+                            <div style="font-size: 0.9rem; color: #666;">你的账户受到多重保护</div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="text-align: center; padding: 1rem; background: #f0fff9; border-radius: 8px;">
+                            <div style="font-size: 1.5rem; color: #00b894; margin-bottom: 0.5rem;">✓</div>
+                            <div style="font-weight: bold;">密码安全</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: #fff5f0; border-radius: 8px;">
+                            <div style="font-size: 1.5rem; color: #fdcb6e; margin-bottom: 0.5rem;">⚠</div>
+                            <div style="font-weight: bold;">两步验证</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: #f0fff9; border-radius: 8px;">
+                            <div style="font-size: 1.5rem; color: #00b894; margin-bottom: 0.5rem;">✓</div>
+                            <div style="font-weight: bold;">登录保护</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 密码管理 -->
+                <div class="security-card">
+                    <div class="card-title">
+                        🔑 密码管理
+                    </div>
+
+                    <form class="password-form" id="passwordForm">
+                        <div class="form-group">
+                            <label class="form-label">当前密码</label>
+                            <input type="password" class="form-input" id="currentPassword" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">新密码</label>
+                            <input type="password" class="form-input" id="newPassword" required>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
+                                </div>
+                                <div class="strength-text" id="strengthText">请输入新密码</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">确认新密码</label>
+                            <input type="password" class="form-input" id="confirmPassword" required>
+                        </div>
+
+                        <button type="submit" class="btn-primary">更新密码</button>
+                    </form>
+
+                    <div class="security-tip">
+                        <div class="tip-title">密码安全建议</div>
+                        <ul style="margin: 0; padding-left: 1.2rem;">
+                            <li>使用至少8个字符，包含字母、数字和特殊符号</li>
+                            <li>不要使用个人信息作为密码</li>
+                            <li>定期更换密码，建议3-6个月一次</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 两步验证 -->
+                <div class="security-card">
+                    <div class="card-title">
+                        📱 两步验证
+                    </div>
+
+                    <div class="two-factor-section" id="twoFactorSection">
+                        <div id="twoFactorDisabled">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔐</div>
+                            <h3>启用两步验证</h3>
+                            <p style="color: #666; margin-bottom: 1.5rem;">为你的账户添加额外的安全保护层</p>
+                            <button class="btn-primary" onclick="enableTwoFactor()">开始设置</button>
+                        </div>
+
+                        <div id="twoFactorEnabled" style="display: none;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem; color: #00b894;">✅</div>
+                            <h3>两步验证已启用</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">你的账户已受到两步验证保护</p>
+
+                            <div class="backup-codes">
+                                <div class="backup-code">ABC-123</div>
+                                <div class="backup-code">DEF-456</div>
+                                <div class="backup-code">GHI-789</div>
+                                <div class="backup-code">JKL-012</div>
+                                <div class="backup-code">MNO-345</div>
+                                <div class="backup-code">PQR-678</div>
+                            </div>
+
+                            <div style="display: flex; gap: 1rem; justify-content: center;">
+                                <button class="btn-secondary" onclick="regenerateCodes()">重新生成备用码</button>
+                                <button class="btn-danger" onclick="disableTwoFactor()">禁用两步验证</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 设备管理 -->
+                <div class="security-card">
+                    <div class="card-title">
+                        💻 受信任设备
+                    </div>
+
+                    <div class="device-list">
+                        <div class="device-item">
+                            <div class="device-info">
+                                <div class="device-name">当前设备 - Windows PC</div>
+                                <div class="device-details">Chrome • 北京市 • 刚刚活跃</div>
+                            </div>
+                            <span class="history-status status-current">当前</span>
+                        </div>
+
+                        <div class="device-item">
+                            <div class="device-info">
+                                <div class="device-name">iPhone 13</div>
+                                <div class="device-details">Safari • 北京市 • 2小时前</div>
+                            </div>
+                            <button class="btn-secondary" style="padding: 0.5rem 1rem;">移除</button>
+                        </div>
+
+                        <div class="device-item">
+                            <div class="device-info">
+                                <div class="device-name">MacBook Pro</div>
+                                <div class="device-details">Safari • 上海市 • 昨天</div>
+                            </div>
+                            <button class="btn-secondary" style="padding: 0.5rem 1rem;">移除</button>
+                        </div>
+                    </div>
+
+                    <button class="btn-danger" style="margin-top: 1rem;" onclick="logoutAllDevices()">
+                        登出所有其他设备
+                    </button>
+                </div>
+
+                <!-- 登录历史 -->
+                <div class="security-card">
+                    <div class="card-title">
+                        📜 登录历史
+                    </div>
+
+                    <div class="login-history">
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-device">Windows PC - Chrome</div>
+                                <div class="history-details">北京市 • 59.108.*.* • 刚刚</div>
+                            </div>
+                            <span class="history-status status-current">当前会话</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-device">iPhone 13 - Safari</div>
+                                <div class="history-details">北京市 • 59.108.*.* • 2小时前</div>
+                            </div>
+                            <span class="history-status status-previous">已结束</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-device">MacBook Pro - Safari</div>
+                                <div class="history-details">上海市 • 180.153.*.* • 昨天 14:30</div>
+                            </div>
+                            <span class="history-status status-previous">已结束</span>
+                        </div>
+
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-device">Windows PC - Edge</div>
+                                <div class="history-details">北京市 • 59.108.*.* • 3天前</div>
+                            </div>
+                            <span class="history-status status-previous">已结束</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 安全设置 -->
+                <div class="security-card">
+                    <div class="card-title">
+                        ⚙️ 安全设置
+                    </div>
+
+                    <div style="display: grid; gap: 1rem;">
+                        <label
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                            <span>
+                                <strong>登录邮件通知</strong><br>
+                                <small style="color: #666;">新设备登录时发送邮件提醒</small>
+                            </span>
+                            <input type="checkbox" checked style="transform: scale(1.2);">
+                        </label>
+
+                        <label
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                            <span>
+                                <strong>异常登录提醒</strong><br>
+                                <small style="color: #666;">检测到可疑登录活动时立即通知</small>
+                            </span>
+                            <input type="checkbox" checked style="transform: scale(1.2);">
+                        </label>
+
+                        <label
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                            <span>
+                                <strong>自动锁定</strong><br>
+                                <small style="color: #666;">30分钟无活动后自动锁定账户</small>
+                            </span>
+                            <input type="checkbox" style="transform: scale(1.2);">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>个人中心</h4>
+                <ul>
+                    <li><a href="profile.html">个人资料</a></li>
+                    <li><a href="dashboard.html">数据概览</a></li>
+                    <li><a href="settings.html">系统设置</a></li>
+                    <li><a href="account-security.html">账户安全</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 LifeSync. 保留所有权利。由无暗创作。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/account-security.js"></script>
+</body>
+
+</html>

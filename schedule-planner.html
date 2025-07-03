@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日程规划工具 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .planner-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .planner-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        .main-planner {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .planner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .date-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .date-nav {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .current-date {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .time-slot {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            min-height: 60px;
+        }
+
+        .time-label {
+            position: absolute;
+            left: -60px;
+            width: 50px;
+            text-align: right;
+            font-size: 0.9rem;
+            color: #666;
+            top: 0;
+        }
+
+        .time-marker {
+            position: absolute;
+            left: -8px;
+            top: 8px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-block {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-left: 20px;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .event-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-block.work {
+            background: #667eea;
+        }
+
+        .event-block.personal {
+            background: #28a745;
+        }
+
+        .event-block.break {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .event-block.important {
+            background: #dc3545;
+        }
+
+        .event-title {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .event-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .empty-slot {
+            margin-left: 20px;
+            flex: 1;
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .empty-slot:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-add-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-input {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .template-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .template-item:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .template-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .template-description {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .ai-suggestions {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .suggestion-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .suggestion-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .stats-mini {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .mini-stat {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .mini-stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .mini-stat-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .planner-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 40px;
+            }
+
+            .time-label {
+                left: -40px;
+                width: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habit-detail.html">习惯详情</a></li>
+                        <li><a href="habit-tracker.html">习惯追踪</a></li>
+                        <li><a href="habit-analytics.html">习惯分析</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">时间管理</a></span>
+            <span class="separator">›</span>
+            <span class="current">日程规划工具</span>
+        </div>
+
+        <div class="planner-container">
+            <div class="ai-suggestions">
+                <h3>🤖 AI 智能建议</h3>
+                <div class="suggestion-item">
+                    💡 建议将重要任务安排在上午9-11点，这是您效率最高的时段
+                </div>
+                <div class="suggestion-item">
+                    ⚡ 下午2-3点安排轻松任务或休息，避免效率低谷期
+                </div>
+                <div class="suggestion-item">
+                    🎯 今天还有2小时空闲时间，建议安排学习或锻炼
+                </div>
+            </div>
+
+            <div class="planner-grid">
+                <div class="main-planner">
+                    <div class="planner-header">
+                        <h2>智能日程规划</h2>
+                        <div class="date-selector">
+                            <button class="date-nav" id="prevDay">‹</button>
+                            <div class="current-date" id="currentDate">2024年1月15日 周一</div>
+                            <button class="date-nav" id="nextDay">›</button>
+                        </div>
+                    </div>
+
+                    <div class="timeline" id="timeline">
+                        <div class="time-slot">
+                            <div class="time-label">08:00</div>
+                            <div class="time-marker"></div>
+                            <div class="event-block personal">
+                                <div class="event-title">晨间锻炼</div>
+                                <div class="event-description">跑步 + 拉伸</div>
+                            </div>
+                        </div>
+
+                        <div class="time-slot">
+                            <div class="time-label">09:00</div>
+                            <div class="time-marker"></div>
+                            <div class="event-block work">
+                                <div class="event-title">团队站会</div>
+                                <div class="event-description">讨论今日工作安排</div>
+                            </div>
+                        </div>
+
+                        <div class="time-slot">
+                            <div class="time-label">10:00</div>
+                            <div class="time-marker"></div>
+                            <div class="event-block work">
+                                <div class="event-title">功能开发</div>
+                                <div class="event-description">用户管理模块编码</div>
+                            </div>
+                        </div>
+
+                        <div class="time-slot">
+                            <div class="time-label">12:00</div>
+                            <div class="time-marker"></div>
+                            <div class="event-block break">
+                                <div class="event-title">午餐时间</div>
+                                <div class="event-description">放松用餐</div>
+                            </div>
+                        </div>
+
+                        <div class="time-slot">
+                            <div class="time-label">14:00</div>
+                            <div class="time-marker"></div>
+                            <div class="empty-slot" onclick="addEvent('14:00')">
+                                + 点击添加事件
+                            </div>
+                        </div>
+
+                        <div class="time-slot">
+                            <div class="time-label">16:00</div>
+                            <div class="time-marker"></div>
+                            <div class="event-block important">
+                                <div class="event-title">项目评审</div>
+                                <div class="event-description">产品功能评审会议</div>
+                            </div>
+                        </div>
+
+                        <div class="time-slot">
+                            <div class="time-label">18:00</div>
+                            <div class="time-marker"></div>
+                            <div class="empty-slot" onclick="addEvent('18:00')">
+                                + 点击添加事件
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="sidebar-section">
+                        <h3>快速添加事件</h3>
+                        <form class="quick-add-form" id="quickAddForm">
+                            <input type="text" class="form-input" placeholder="事件标题" id="eventTitle">
+                            <input type="time" class="form-input" id="eventTime">
+                            <select class="form-input" id="eventType">
+                                <option value="work">工作</option>
+                                <option value="personal">个人</option>
+                                <option value="break">休息</option>
+                                <option value="important">重要</option>
+                            </select>
+                            <textarea class="form-input" rows="3" placeholder="详细描述..."
+                                id="eventDescription"></textarea>
+                            <button type="submit" class="add-btn">添加到日程</button>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>日程模板</h3>
+                        <div class="template-item" onclick="applyTemplate('productive')">
+                            <div class="template-title">🚀 高效工作日</div>
+                            <div class="template-description">专注工作，合理休息</div>
+                        </div>
+                        <div class="template-item" onclick="applyTemplate('balanced')">
+                            <div class="template-title">⚖️ 工作生活平衡</div>
+                            <div class="template-description">工作与生活兼顾</div>
+                        </div>
+                        <div class="template-item" onclick="applyTemplate('learning')">
+                            <div class="template-title">📚 学习充电日</div>
+                            <div class="template-description">专注学习和技能提升</div>
+                        </div>
+                        <div class="template-item" onclick="applyTemplate('creative')">
+                            <div class="template-title">🎨 创意工作日</div>
+                            <div class="template-description">创意思考和项目规划</div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>今日概览</h3>
+                        <div class="stats-mini">
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">6</div>
+                                <div class="mini-stat-label">已安排事件</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">8h</div>
+                                <div class="mini-stat-label">计划工作时间</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">2h</div>
+                                <div class="mini-stat-label">空闲时间</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">85%</div>
+                                <div class="mini-stat-label">时间利用率</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>时间管理</h4>
+                <ul>
+                    <li><a href="pomodoro.html">番茄钟</a></li>
+                    <li><a href="calendar.html">日程安排</a></li>
+                    <li><a href="time-stats.html">时间统计</a></li>
+                    <li><a href="focus-history.html">专注记录</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/schedule-planner.js"></script>
+</body>
+
+</html>

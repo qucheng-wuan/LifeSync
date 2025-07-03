@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据概览 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid;
+        }
+
+        .stat-card.habits {
+            border-left-color: #00b894;
+        }
+
+        .stat-card.time {
+            border-left-color: #667eea;
+        }
+
+        .stat-card.mood {
+            border-left-color: #fd79a8;
+        }
+
+        .stat-card.achievements {
+            border-left-color: #fdcb6e;
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: #00b894;
+        }
+
+        .stat-change.negative {
+            color: #e17055;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            position: relative;
+        }
+
+        .progress-rings {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+        }
+
+        .progress-ring {
+            text-align: center;
+        }
+
+        .ring-chart {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 8px solid #e0e0e0;
+            border-top: 8px solid;
+            margin: 0 auto 0.5rem;
+            animation: spin 2s linear infinite;
+        }
+
+        .ring-chart.habits {
+            border-top-color: #00b894;
+            animation-duration: 3s;
+        }
+
+        .ring-chart.mood {
+            border-top-color: #fd79a8;
+            animation-duration: 4s;
+        }
+
+        .ring-chart.focus {
+            border-top-color: #667eea;
+            animation-duration: 5s;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .activity-timeline {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-text {
+            margin-bottom: 0.3rem;
+            color: #333;
+        }
+
+        .timeline-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .goals-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .goal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .goal-info {
+            flex: 1;
+        }
+
+        .goal-title {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .goal-progress {
+            width: 100px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .goal-fill {
+            height: 100%;
+            background: #00b894;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .quick-stat {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .quick-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.3rem;
+        }
+
+        .export-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .export-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #74b9ff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #ddd;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">LifeSync</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                        <li><a href="mood-trends.html">趋势报告</a></li>
+                        <li><a href="mood-assessment.html">健康评估</a></li>
+                        <li><a href="mood-training.html">情绪训练</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">个人中心 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="profile.html">个人资料</a></li>
+                        <li><a href="dashboard.html">数据概览</a></li>
+                        <li><a href="settings.html">系统设置</a></li>
+                        <li><a href="account-security.html">账户安全</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">个人中心</a></span>
+            <span class="separator">›</span>
+            <span class="current">数据概览</span>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>📊 数据概览</h1>
+                <p>全面了解你的生活管理状况和进步轨迹</p>
+            </div>
+
+            <div class="stats-overview">
+                <div class="stat-card habits">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-number" style="color: #00b894;">15</div>
+                    <div class="stat-label">活跃习惯</div>
+                    <div class="stat-change positive">+3 本月</div>
+                </div>
+
+                <div class="stat-card time">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-number" style="color: #667eea;">156</div>
+                    <div class="stat-label">专注小时</div>
+                    <div class="stat-change positive">+12% 本周</div>
+                </div>
+
+                <div class="stat-card mood">
+                    <div class="stat-icon">😊</div>
+                    <div class="stat-number" style="color: #fd79a8;">8.2</div>
+                    <div class="stat-label">平均心情</div>
+                    <div class="stat-change positive">+0.5 较上月</div>
+                </div>
+
+                <div class="stat-card achievements">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-number" style="color: #fdcb6e;">23</div>
+                    <div class="stat-label">获得成就</div>
+                    <div class="stat-change positive">+4 本月</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-panel">
+                    <div class="chart-title">
+                        📈 本月趋势分析
+                    </div>
+                    <div class="chart-container">
+                        📊 习惯完成度、心情指数、专注时长趋势图<br>
+                        (实际项目中可集成Chart.js或ECharts)
+                    </div>
+                </div>
+
+                <div class="chart-panel">
+                    <div class="chart-title">
+                        🎯 各项能力评估
+                    </div>
+                    <div class="chart-container">
+                        <div class="progress-rings">
+                            <div class="progress-ring">
+                                <div class="ring-chart habits"></div>
+                                <div style="font-weight: bold;">85%</div>
+                                <div style="font-size: 0.8rem; color: #666;">习惯管理</div>
+                            </div>
+                            <div class="progress-ring">
+                                <div class="ring-chart mood"></div>
+                                <div style="font-weight: bold;">78%</div>
+                                <div style="font-size: 0.8rem; color: #666;">情绪健康</div>
+                            </div>
+                            <div class="progress-ring">
+                                <div class="ring-chart focus"></div>
+                                <div style="font-weight: bold;">92%</div>
+                                <div style="font-size: 0.8rem; color: #666;">专注能力</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-grid">
+                <div class="goals-panel">
+                    <div class="chart-title">
+                        🎯 当前目标
+                    </div>
+
+                    <div class="goal-item">
+                        <div class="goal-info">
+                            <div class="goal-title">每日运动30分钟</div>
+                            <div style="font-size: 0.9rem; color: #666;">本月进度：21/30天</div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="goal-fill" style="width: 70%"></div>
+                        </div>
+                    </div>
+
+                    <div class="goal-item">
+                        <div class="goal-info">
+                            <div class="goal-title">早起习惯养成</div>
+                            <div style="font-size: 0.9rem; color: #666;">连续坚持：15天</div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="goal-fill" style="width: 50%"></div>
+                        </div>
+                    </div>
+
+                    <div class="goal-item">
+                        <div class="goal-info">
+                            <div class="goal-title">每日阅读计划</div>
+                            <div style="font-size: 0.9rem; color: #666;">本月已读：8/12本</div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="goal-fill" style="width: 67%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-panel">
+                    <div class="chart-title">
+                        📋 最近活动
+                    </div>
+                    <div class="activity-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #00b894;">✅</div>
+                            <div class="timeline-content">
+                                <div class="timeline-text">完成了晨练习惯</div>
+                                <div class="timeline-time">2小时前</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #fd79a8;">😊</div>
+                            <div class="timeline-content">
+                                <div class="timeline-text">记录了今日心情</div>
+                                <div class="timeline-time">3小时前</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #667eea;">⏰</div>
+                            <div class="timeline-content">
+                                <div class="timeline-text">完成了2小时专注工作</div>
+                                <div class="timeline-time">5小时前</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #fdcb6e;">🏆</div>
+                            <div class="timeline-content">
+                                <div class="timeline-text">获得了"连续记录"成就</div>
+                                <div class="timeline-time">昨天</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon" style="background: #a29bfe;">📚</div>
+                            <div class="timeline-content">
+                                <div class="timeline-text">完成了情绪训练课程</div>
+                                <div class="timeline-time">昨天</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="goals-panel">
+                    <div class="chart-title">
+                        📊 本周统计
+                    </div>
+                    <div class="quick-stats">
+                        <div class="quick-stat">
+                            <div class="quick-number">42</div>
+                            <div style="color: #666;">专注次数</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-number">28</div>
+                            <div style="color: #666;">习惯完成</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-number">7</div>
+                            <div style="color: #666;">心情记录</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-number">95%</div>
+                            <div style="color: #666;">目标达成率</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-section">
+                    <div class="chart-title">
+                        📤 数据导出
+                    </div>
+                    <p style="color: #666; margin-bottom: 1rem;">导出你的数据进行备份或分析</p>
+                    <div class="export-buttons">
+                        <button class="export-btn btn-primary" onclick="exportAllData()">导出全部数据</button>
+                        <button class="export-btn btn-secondary" onclick="generateReport()">生成报告</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>个人中心</h4>
+                <ul>
+                    <li><a href="profile.html">个人资料</a></li>
+                    <li><a href="dashboard.html">数据概览</a></li>
+                    <li><a href="settings.html">系统设置</a></li>
+                    <li><a href="account-security.html">账户安全</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 LifeSync. 保留所有权利。由无暗创作。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

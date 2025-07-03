@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情绪训练 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .training-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .training-header {
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            color: #2d3436;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .training-nav {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: #fd79a8;
+            color: white;
+        }
+
+        .training-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #fd79a8;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .course-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .course-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .course-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: #fd79a8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            background: #e84393;
+        }
+
+        .exercise-panel {
+            display: none;
+        }
+
+        .exercise-panel.active {
+            display: block;
+        }
+
+        .exercise-header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .exercise-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .breathing-circle {
+            width: 200px;
+            height: 200px;
+            border: 4px solid #a29bfe;
+            border-radius: 50%;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #6c5ce7;
+            transition: all 4s ease;
+        }
+
+        .breathing-circle.inhale {
+            transform: scale(1.3);
+            background: rgba(162, 155, 254, 0.1);
+        }
+
+        .breathing-circle.exhale {
+            transform: scale(0.8);
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .timer-display {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #6c5ce7;
+            margin: 1rem 0;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .control-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #a29bfe;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .meditation-guide {
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .guide-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .progress-tracker {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #00b894;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .journal-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .journal-prompt {
+            background: #e8f4f8;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #74b9ff;
+        }
+
+        .journal-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .save-btn {
+            margin-top: 1rem;
+            padding: 0.8rem 2rem;
+            background: #00b894;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .resources-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .resource-item {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #fdcb6e;
+        }
+
+        .resource-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .resource-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #ffeaa7;
+            color: #d63031;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                        <li><a href="mood-trends.html">趋势报告</a></li>
+                        <li><a href="mood-assessment.html">健康评估</a></li>
+                        <li><a href="mood-training.html">情绪训练</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="search.html" class="nav-link">搜索</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">心情日记</a></span>
+            <span class="separator">›</span>
+            <span class="current">情绪训练</span>
+        </div>
+
+        <div class="training-container">
+            <div class="training-header">
+                <h1>🎯 情绪训练中心</h1>
+                <p>通过科学的训练方法，提升你的情绪管理技能</p>
+            </div>
+
+            <div class="training-nav">
+                <div class="nav-tab active" data-tab="courses">训练课程</div>
+                <div class="nav-tab" data-tab="exercises">即时练习</div>
+                <div class="nav-tab" data-tab="progress">进度追踪</div>
+                <div class="nav-tab" data-tab="resources">学习资源</div>
+            </div>
+
+            <!-- 训练课程面板 -->
+            <div class="training-content" id="coursesPanel">
+                <h3>精选训练课程</h3>
+                <div class="courses-grid">
+                    <div class="course-card">
+                        <div class="course-icon">🧘‍♀️</div>
+                        <div class="course-title">正念冥想基础</div>
+                        <div class="course-description">
+                            学习基础正念冥想技巧，培养专注力和内心平静。通过系统的练习，提升情绪觉察能力。
+                        </div>
+                        <div class="course-meta">
+                            <span>⏱️ 15分钟</span>
+                            <span>📈 初级</span>
+                            <span>🎯 专注力</span>
+                        </div>
+                        <button class="start-btn" onclick="startCourse('mindfulness')">开始学习</button>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-icon">💨</div>
+                        <div class="course-title">深呼吸训练</div>
+                        <div class="course-description">
+                            掌握科学的呼吸技巧，快速缓解压力和焦虑。适合日常使用的简单有效方法。
+                        </div>
+                        <div class="course-meta">
+                            <span>⏱️ 10分钟</span>
+                            <span>📈 初级</span>
+                            <span>🎯 压力缓解</span>
+                        </div>
+                        <button class="start-btn" onclick="startCourse('breathing')">开始学习</button>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-icon">💭</div>
+                        <div class="course-title">认知重构训练</div>
+                        <div class="course-description">
+                            学会识别和改变负面思维模式，培养更积极理性的思考方式。
+                        </div>
+                        <div class="course-meta">
+                            <span>⏱️ 20分钟</span>
+                            <span>📈 中级</span>
+                            <span>🎯 思维改善</span>
+                        </div>
+                        <button class="start-btn" onclick="startCourse('cognitive')">开始学习</button>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-icon">💪</div>
+                        <div class="course-title">情绪调节技巧</div>
+                        <div class="course-description">
+                            学习多种情绪调节策略，包括身体放松、认知调节和行为改变技巧。
+                        </div>
+                        <div class="course-meta">
+                            <span>⏱️ 25分钟</span>
+                            <span>📈 中级</span>
+                            <span>🎯 情绪管理</span>
+                        </div>
+                        <button class="start-btn" onclick="startCourse('regulation')">开始学习</button>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-icon">🌟</div>
+                        <div class="course-title">积极心理学实践</div>
+                        <div class="course-description">
+                            培养感恩、乐观和韧性等积极品质，建立持久的幸福感和生活满意度。
+                        </div>
+                        <div class="course-meta">
+                            <span>⏱️ 30分钟</span>
+                            <span>📈 高级</span>
+                            <span>🎯 幸福感提升</span>
+                        </div>
+                        <button class="start-btn" onclick="startCourse('positive')">开始学习</button>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-icon">🤝</div>
+                        <div class="course-title">人际情绪智慧</div>
+                        <div class="course-description">
+                            提升社交情商，学会理解他人情绪，改善人际关系和沟通效果。
+                        </div>
+                        <div class="course-meta">
+                            <span>⏱️ 35分钟</span>
+                            <span>📈 高级</span>
+                            <span>🎯 社交技能</span>
+                        </div>
+                        <button class="start-btn" onclick="startCourse('interpersonal')">开始学习</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 即时练习面板 -->
+            <div class="exercise-panel" id="exercisesPanel">
+                <div class="exercise-header">
+                    <h2>🌸 即时练习</h2>
+                    <p>快速有效的情绪调节练习</p>
+                </div>
+
+                <div class="exercise-content">
+                    <h3>深呼吸练习</h3>
+                    <div class="breathing-circle" id="breathingCircle">
+                        <span id="breathingText">准备开始</span>
+                    </div>
+
+                    <div class="timer-display" id="timerDisplay">00:00</div>
+
+                    <div class="control-buttons">
+                        <button class="control-btn btn-primary" id="startBreathing">开始练习</button>
+                        <button class="control-btn btn-secondary" id="pauseBreathing">暂停</button>
+                        <button class="control-btn btn-secondary" id="resetBreathing">重置</button>
+                    </div>
+
+                    <div class="meditation-guide">
+                        <div class="guide-text" id="guideText">
+                            找一个舒适的位置坐下，闭上眼睛，让我们开始4-7-8呼吸法练习...
+                        </div>
+                    </div>
+                </div>
+
+                <div class="journal-section">
+                    <h3>练习反思</h3>
+                    <div class="journal-prompt">
+                        💭 练习结束后，请记录你的感受和体验：
+                        <br>• 练习过程中有什么感受？
+                        <br>• 现在的情绪状态如何？
+                        <br>• 有什么新的发现或想法吗？
+                    </div>
+                    <textarea class="journal-textarea" placeholder="在这里记录你的练习心得..."></textarea>
+                    <button class="save-btn">保存反思</button>
+                </div>
+            </div>
+
+            <!-- 进度追踪面板 -->
+            <div class="exercise-panel" id="progressPanel">
+                <h3>训练进度</h3>
+                <div class="progress-tracker">
+                    <div class="progress-item">
+                        <span>正念冥想</span>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                            <span style="margin-left: 1rem;">65%</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <span>深呼吸练习</span>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                            <span style="margin-left: 1rem;">80%</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <span>认知重构</span>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                            <span style="margin-left: 1rem;">40%</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <span>情绪调节</span>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 55%"></div>
+                            </div>
+                            <span style="margin-left: 1rem;">55%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>学习成就</h3>
+                <div style="text-align: center; padding: 2rem;">
+                    <div class="achievement-badge">初学者</div>
+                    <div class="achievement-badge">坚持练习7天</div>
+                    <div class="achievement-badge">冥想达人</div>
+                    <div class="achievement-badge">情绪稳定</div>
+                    <div class="achievement-badge">深呼吸专家</div>
+                </div>
+            </div>
+
+            <!-- 学习资源面板 -->
+            <div class="exercise-panel" id="resourcesPanel">
+                <h3>学习资源</h3>
+                <div class="resources-list">
+                    <div class="resource-item">
+                        <div class="resource-title">📚 情绪管理指南</div>
+                        <div class="resource-description">
+                            专业的情绪管理理论知识和实践技巧，帮助你系统性地提升情绪智商。
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-title">🎵 冥想音乐</div>
+                        <div class="resource-description">
+                            精选的冥想和放松音乐，营造宁静的练习环境，提升练习效果。
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-title">📖 推荐阅读</div>
+                        <div class="resource-description">
+                            心理学经典书籍推荐，深入了解情绪和心理健康的科学知识。
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-title">🎯 练习计划</div>
+                        <div class="resource-description">
+                            个性化的训练计划模板，帮助你制定和坚持长期的情绪管理习惯。
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-title">👥 社区支持</div>
+                        <div class="resource-description">
+                            加入情绪管理学习社区，与其他学习者交流经验，获得支持和鼓励。
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-title">🔗 专业帮助</div>
+                        <div class="resource-description">
+                            心理咨询师和治疗师的联系方式，提供专业的心理健康支持服务。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>心情日记</h4>
+                <ul>
+                    <li><a href="mood-diary.html">心情记录</a></li>
+                    <li><a href="mood-analysis.html">情绪分析</a></li>
+                    <li><a href="mood-insights.html">心理洞察</a></li>
+                    <li><a href="mood-calendar.html">心情日历</a></li>
+                    <li><a href="mood-trends.html">趋势报告</a></li>
+                    <li><a href="mood-assessment.html">健康评估</a></li>
+                    <li><a href="mood-training.html">情绪训练</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/mood-training.js"></script>
+</body>
+
+</html>

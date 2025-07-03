@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心情日历 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .calendar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .calendar-header {
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 100%);
+            color: #2d3436;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .calendar-grid {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .weekday {
+            text-align: center;
+            font-weight: bold;
+            color: #666;
+            padding: 1rem;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+        }
+
+        .day-cell:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .day-cell.has-mood {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .day-cell.today {
+            border-color: #ff758c;
+            background: #fff5f7;
+        }
+
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .day-mood {
+            font-size: 1.5rem;
+        }
+
+        .mood-legend {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .legend-emoji {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="search.html" class="nav-link">搜索</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">心情日记</a></span>
+            <span class="separator">›</span>
+            <span class="current">心情日历</span>
+        </div>
+
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h1>📅 心情日历</h1>
+                <p>一览你的情绪时光，记录每一天的心情轨迹</p>
+            </div>
+
+            <div class="calendar-nav">
+                <button class="nav-btn" id="prevMonth">‹ 上月</button>
+                <h2 id="currentMonth">2024年1月</h2>
+                <button class="nav-btn" id="nextMonth">下月 ›</button>
+            </div>
+
+            <div class="calendar-grid">
+                <div class="weekdays">
+                    <div class="weekday">日</div>
+                    <div class="weekday">一</div>
+                    <div class="weekday">二</div>
+                    <div class="weekday">三</div>
+                    <div class="weekday">四</div>
+                    <div class="weekday">五</div>
+                    <div class="weekday">六</div>
+                </div>
+                <div class="days-grid" id="daysGrid">
+                    <!-- 日历格子将通过JavaScript生成 -->
+                </div>
+            </div>
+
+            <div class="mood-legend">
+                <h3>心情图例</h3>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <span class="legend-emoji">😊</span>
+                        <span>开心快乐</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-emoji">😌</span>
+                        <span>平静放松</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-emoji">🤩</span>
+                        <span>兴奋激动</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-emoji">😴</span>
+                        <span>疲惫困倦</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-emoji">😢</span>
+                        <span>难过伤心</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-emoji">😰</span>
+                        <span>焦虑不安</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>心情日记</h4>
+                <ul>
+                    <li><a href="mood-diary.html">心情记录</a></li>
+                    <li><a href="mood-analysis.html">情绪分析</a></li>
+                    <li><a href="mood-insights.html">心理洞察</a></li>
+                    <li><a href="mood-calendar.html">心情日历</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/mood-calendar.js"></script>
+</body>
+
+</html>

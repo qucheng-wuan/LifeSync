@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情绪分析 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* CSS变量定义 */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --analysis-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-color: #10ac84;
+            --warning-color: #ff9f43;
+            --info-color: #3742fa;
+            --shadow-soft: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .analysis-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 精美的分析头部 */
+        .analysis-header {
+            background: var(--analysis-gradient);
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analysis-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .analysis-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .analysis-period {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        /* 时间筛选标签 */
+        .filter-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .filter-tab {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .filter-tab:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .filter-tab.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .custom-date-range {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .date-inputs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .date-input {
+            padding: 0.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* 统计卡片网格 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 600;
+        }
+
+        .stat-change.positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .stat-change.negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* 图表区域 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            height: 350px;
+            background: linear-gradient(145deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-placeholder {
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .chart-placeholder::before {
+            content: '📊';
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        /* 心情分布 */
+        .mood-distribution {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .mood-item {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: linear-gradient(145deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .mood-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mood-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .mood-percentage {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.3rem;
+        }
+
+        .mood-label {
+            font-size: 0.9rem;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        /* 详细分析区域 */
+        .analysis-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .analysis-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .analysis-card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 触发因素分析 */
+        .trigger-analysis {
+            margin-top: 1rem;
+        }
+
+        .trigger-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            background: linear-gradient(145deg, #f7fafc, #edf2f7);
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+        }
+
+        .trigger-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .trigger-impact {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .impact-bar {
+            width: 80px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .impact-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: width 0.8s ease;
+        }
+
+        .impact-score {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #667eea;
+            min-width: 40px;
+        }
+
+        /* 时间模式分析 */
+        .time-patterns {
+            margin-top: 1rem;
+        }
+
+        .pattern-item {
+            padding: 1rem;
+            background: linear-gradient(145deg, #f7fafc, #edf2f7);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .pattern-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .pattern-description {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .pattern-emoji {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        /* 洞察建议 */
+        .insights-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .insight-card {
+            background: linear-gradient(145deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid;
+            transition: var(--transition);
+        }
+
+        .insight-card.positive {
+            border-left-color: #10ac84;
+        }
+
+        .insight-card.warning {
+            border-left-color: #ff9f43;
+        }
+
+        .insight-card.info {
+            border-left-color: #3742fa;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .insight-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .insight-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .insight-content {
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* 导出功能 */
+        .export-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .export-btn.primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .export-btn.secondary {
+            background: linear-gradient(135deg, #10ac84, #2ed573);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 172, 132, 0.3);
+        }
+
+        .export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analysis-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .analysis-container {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-tabs {
+                grid-template-columns: repeat(2, 1fr);
+                display: grid;
+            }
+
+            .date-inputs {
+                flex-direction: column;
+            }
+
+            .analysis-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* 加载动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* 进度环 */
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+        }
+
+        .progress-ring-circle {
+            stroke: #e2e8f0;
+            stroke-width: 8;
+            fill: transparent;
+        }
+
+        .progress-ring-progress {
+            stroke: #667eea;
+            stroke-width: 8;
+            fill: transparent;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.8s ease-out;
+        }
+
+        /* 工具提示 */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3748;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+            font-size: 0.8rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                        <li><a href="mood-trends.html">趋势报告</a></li>
+                        <li><a href="mood-assessment.html">健康评估</a></li>
+                        <li><a href="mood-training.html">情绪训练</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">个人中心 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="profile.html">个人资料</a></li>
+                        <li><a href="dashboard.html">数据概览</a></li>
+                        <li><a href="settings.html">系统设置</a></li>
+                        <li><a href="account-security.html">账户安全</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">心情日记</a></span>
+            <span class="separator">›</span>
+            <span class="current">情绪分析</span>
+        </div>
+
+        <div class="analysis-container">
+            <!-- 精美的分析头部 -->
+            <div class="analysis-header fade-in-up">
+                <div class="header-content">
+                    <h1 class="analysis-title">📊 情绪分析</h1>
+                    <p class="analysis-subtitle">通过数据洞察你的情绪变化，发现内心的规律与美好</p>
+                    <div class="analysis-period" id="analysisPeriod">分析周期：最近30天</div>
+                </div>
+            </div>
+
+            <!-- 时间筛选区域 -->
+            <div class="filter-section fade-in-up">
+                <h3 style="margin-bottom: 1rem; color: #2d3748;">🕐 选择分析时间段</h3>
+                <div class="filter-tabs">
+                    <div class="filter-tab active" data-period="week">本周</div>
+                    <div class="filter-tab" data-period="month">本月</div>
+                    <div class="filter-tab" data-period="quarter">本季度</div>
+                    <div class="filter-tab" data-period="year">今年</div>
+                    <div class="filter-tab" data-period="custom">自定义</div>
+                </div>
+                <div class="custom-date-range" id="customDateRange">
+                    <div class="date-inputs">
+                        <label for="startDate">开始日期:</label>
+                        <input type="date" id="startDate" class="date-input">
+                        <label for="endDate">结束日期:</label>
+                        <input type="date" id="endDate" class="date-input">
+                        <button onclick="applyCustomRange()"
+                            style="padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer;">应用</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 核心统计卡片 -->
+            <div class="stats-grid fade-in-up">
+                <div class="stat-card">
+                    <div class="stat-icon">😊</div>
+                    <div class="stat-value" id="avgMoodValue">8.2</div>
+                    <div class="stat-label">平均心情指数</div>
+                    <div class="stat-change positive" id="avgMoodChange">较上周 +0.5</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value" id="totalEntriesValue">24</div>
+                    <div class="stat-label">总记录天数</div>
+                    <div class="stat-change positive" id="totalEntriesChange">较上月 +12</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="streakDaysValue">15</div>
+                    <div class="stat-label">连续记录天数</div>
+                    <div class="stat-change positive" id="streakDaysChange">新记录！</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🌟</div>
+                    <div class="stat-value" id="positiveRateValue">85%</div>
+                    <div class="stat-label">积极情绪占比</div>
+                    <div class="stat-change positive" id="positiveRateChange">较上月 +8%</div>
+                </div>
+            </div>
+
+            <!-- 图表区域 -->
+            <div class="charts-grid fade-in-up">
+                <div class="chart-section">
+                    <h3 class="chart-title">📈 情绪趋势图</h3>
+                    <div class="chart-container" id="trendChart">
+                        <div class="chart-placeholder">
+                            <div>情绪变化趋势</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.7;">显示您最近的心情波动</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <h3 class="chart-title">🎯 心情分布</h3>
+                    <div class="mood-distribution" id="moodDistribution">
+                        <!-- 心情分布将由JavaScript生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 详细分析 -->
+            <div class="analysis-details fade-in-up">
+                <div class="analysis-card">
+                    <h3 class="analysis-card-title">🎯 影响因素分析</h3>
+                    <div class="trigger-analysis" id="triggerAnalysis">
+                        <!-- 触发因素分析将由JavaScript生成 -->
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3 class="analysis-card-title">⏰ 时间模式识别</h3>
+                    <div class="time-patterns" id="timePatterns">
+                        <!-- 时间模式将由JavaScript生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 智能洞察建议 -->
+            <div class="insights-section fade-in-up">
+                <h3 class="chart-title">💡 智能洞察与建议</h3>
+                <div class="insights-grid" id="insightsGrid">
+                    <!-- 洞察建议将由JavaScript生成 -->
+                </div>
+            </div>
+
+            <!-- 导出功能 -->
+            <div class="export-section fade-in-up">
+                <h3 style="margin-bottom: 1rem; color: #2d3748;">📤 导出分析报告</h3>
+                <p style="color: #4a5568; margin-bottom: 1.5rem;">将您的情绪分析数据导出为报告，便于长期追踪和分享</p>
+                <div class="export-buttons">
+                    <button class="export-btn primary" onclick="exportAnalysisReport('pdf')">
+                        📄 导出PDF报告
+                    </button>
+                    <button class="export-btn secondary" onclick="exportAnalysisReport('csv')">
+                        📊 导出CSV数据
+                    </button>
+                    <button class="export-btn primary" onclick="shareAnalysis()">
+                        🔗 分享分析结果
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>心情管理</h4>
+                <ul>
+                    <li><a href="mood-diary.html">心情记录</a></li>
+                    <li><a href="mood-analysis.html">情绪分析</a></li>
+                    <li><a href="mood-insights.html">心理洞察</a></li>
+                    <li><a href="mood-calendar.html">心情日历</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <ul>
+                    <li><a href="about.html">关于LifeSync</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="contact.html">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。 | 让每一天都充满意义</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/mood-analysis.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专注历史记录 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .focus-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .focus-header {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .focus-records {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .record-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .record-item:hover {
+            background: #f8f9fa;
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+        }
+
+        .record-time {
+            font-size: 0.9rem;
+            color: #666;
+            min-width: 120px;
+        }
+
+        .record-duration {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+            margin: 0 1rem;
+        }
+
+        .record-details {
+            flex: 1;
+        }
+
+        .record-task {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .record-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .record-score {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .score-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .search-box {
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state img {
+            width: 150px;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .record-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .filter-section {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habit-detail.html">习惯详情</a></li>
+                        <li><a href="habit-tracker.html">习惯追踪</a></li>
+                        <li><a href="habit-analytics.html">习惯分析</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">时间管理</a></span>
+            <span class="separator">›</span>
+            <span class="current">专注历史记录</span>
+        </div>
+
+        <div class="focus-container">
+            <div class="focus-header">
+                <h1>专注历史记录</h1>
+                <p>回顾您的专注时光，发现效率规律</p>
+                <div class="filter-section">
+                    <button class="filter-btn active" data-filter="all">全部</button>
+                    <button class="filter-btn" data-filter="today">今天</button>
+                    <button class="filter-btn" data-filter="week">本周</button>
+                    <button class="filter-btn" data-filter="month">本月</button>
+                    <button class="filter-btn" data-filter="pomodoro">番茄钟</button>
+                    <button class="filter-btn" data-filter="deep">深度专注</button>
+                </div>
+            </div>
+
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-value">127</div>
+                    <div class="stat-label">总专注次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">63.5h</div>
+                    <div class="stat-label">累计专注时间</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">连续专注天数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">89%</div>
+                    <div class="stat-label">平均专注度</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2.1h</div>
+                    <div class="stat-label">最长专注时间</div>
+                </div>
+            </div>
+
+            <div class="focus-records">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索专注记录...">
+                </div>
+
+                <div id="recordsList">
+                    <div class="record-item">
+                        <div class="record-time">今天 14:30</div>
+                        <div class="record-duration">25min</div>
+                        <div class="record-details">
+                            <div class="record-task">代码重构 - 用户管理模块</div>
+                            <div class="record-description">优化用户登录流程，提升代码可读性</div>
+                        </div>
+                        <div class="record-score">
+                            <div class="score-value">95%</div>
+                            <div>专注度</div>
+                        </div>
+                    </div>
+
+                    <div class="record-item">
+                        <div class="record-time">今天 10:15</div>
+                        <div class="record-duration">45min</div>
+                        <div class="record-details">
+                            <div class="record-task">技术文档编写</div>
+                            <div class="record-description">编写API接口说明文档</div>
+                        </div>
+                        <div class="record-score">
+                            <div class="score-value">88%</div>
+                            <div>专注度</div>
+                        </div>
+                    </div>
+
+                    <div class="record-item">
+                        <div class="record-time">昨天 16:20</div>
+                        <div class="record-duration">1h 30min</div>
+                        <div class="record-details">
+                            <div class="record-task">深度学习 - React Hooks</div>
+                            <div class="record-description">学习useCallback和useMemo的使用场景</div>
+                        </div>
+                        <div class="record-score">
+                            <div class="score-value">92%</div>
+                            <div>专注度</div>
+                        </div>
+                    </div>
+
+                    <div class="record-item">
+                        <div class="record-time">昨天 09:00</div>
+                        <div class="record-duration">25min</div>
+                        <div class="record-details">
+                            <div class="record-task">晨间阅读</div>
+                            <div class="record-description">阅读《深度工作》第三章</div>
+                        </div>
+                        <div class="record-score">
+                            <div class="score-value">85%</div>
+                            <div>专注度</div>
+                        </div>
+                    </div>
+
+                    <div class="record-item">
+                        <div class="record-time">前天 15:45</div>
+                        <div class="record-duration">50min</div>
+                        <div class="record-details">
+                            <div class="record-task">项目会议准备</div>
+                            <div class="record-description">整理需求文档，准备演示材料</div>
+                        </div>
+                        <div class="record-score">
+                            <div class="score-value">78%</div>
+                            <div>专注度</div>
+                        </div>
+                    </div>
+
+                    <div class="record-item">
+                        <div class="record-time">前天 11:30</div>
+                        <div class="record-duration">2h 15min</div>
+                        <div class="record-details">
+                            <div class="record-task">算法练习</div>
+                            <div class="record-description">LeetCode刷题 - 动态规划专题</div>
+                        </div>
+                        <div class="record-score">
+                            <div class="score-value">96%</div>
+                            <div>专注度</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>时间管理</h4>
+                <ul>
+                    <li><a href="pomodoro.html">番茄钟</a></li>
+                    <li><a href="calendar.html">日程安排</a></li>
+                    <li><a href="time-stats.html">时间统计</a></li>
+                    <li><a href="focus-history.html">专注记录</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/focus-history.js"></script>
+</body>
+
+</html>

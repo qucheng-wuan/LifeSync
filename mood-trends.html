@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心情趋势报告 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .trends-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .trends-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .report-controls {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 0.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .export-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .trends-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.3rem;
+        }
+
+        .chart-container {
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            margin: 1rem 0;
+        }
+
+        .detailed-analysis {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .analysis-section {
+            margin-bottom: 2rem;
+        }
+
+        .analysis-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mood-timeline {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+
+        .timeline-day {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            min-width: 60px;
+        }
+
+        .timeline-date {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-mood {
+            font-size: 1.5rem;
+        }
+
+        .correlation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .correlation-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .correlation-factor {
+            font-weight: 500;
+        }
+
+        .correlation-score {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .recommendations {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            color: #2d3436;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .recommendation-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                        <li><a href="mood-trends.html">趋势报告</a></li>
+                        <li><a href="mood-assessment.html">健康评估</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">心情日记</a></span>
+            <span class="separator">›</span>
+            <span class="current">趋势报告</span>
+        </div>
+
+        <div class="trends-container">
+            <div class="trends-header">
+                <h1>📈 心情趋势报告</h1>
+                <p>深度分析你的情绪变化模式，发现心理健康趋势</p>
+            </div>
+
+            <div class="report-controls">
+                <div class="date-range">
+                    <label>分析期间：</label>
+                    <input type="date" class="date-input" id="startDate" value="2024-01-01">
+                    <span>至</span>
+                    <input type="date" class="date-input" id="endDate" value="2024-01-31">
+                    <button class="btn btn-primary" id="updateReport">更新报告</button>
+                </div>
+                <div class="export-btns">
+                    <button class="btn btn-secondary" id="exportPDF">📄 导出PDF</button>
+                    <button class="btn btn-secondary" id="exportCSV">📊 导出数据</button>
+                </div>
+            </div>
+
+            <div class="trends-grid">
+                <div class="chart-panel">
+                    <h3>情绪趋势图</h3>
+                    <div class="chart-container">
+                        📈 详细的心情变化曲线图 <br>
+                        (实际项目中集成Chart.js或D3.js)
+                    </div>
+
+                    <h4>近期心情时间线</h4>
+                    <div class="mood-timeline" id="moodTimeline">
+                        <!-- 由JavaScript动态生成 -->
+                    </div>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value">7.6</div>
+                        <div>平均心情指数</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-value">+12%</div>
+                        <div>较上月改善</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value">85%</div>
+                        <div>情绪稳定度</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value">92%</div>
+                        <div>积极情绪占比</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detailed-analysis">
+                <div class="analysis-section">
+                    <div class="analysis-title">
+                        🔍 影响因素分析
+                    </div>
+                    <ul class="correlation-list">
+                        <li class="correlation-item">
+                            <span class="correlation-factor">运动锻炼</span>
+                            <span class="correlation-score">+0.78</span>
+                        </li>
+                        <li class="correlation-item">
+                            <span class="correlation-factor">充足睡眠</span>
+                            <span class="correlation-score">+0.65</span>
+                        </li>
+                        <li class="correlation-item">
+                            <span class="correlation-factor">社交活动</span>
+                            <span class="correlation-score">+0.52</span>
+                        </li>
+                        <li class="correlation-item">
+                            <span class="correlation-factor">工作压力</span>
+                            <span class="correlation-score">-0.43</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="analysis-section">
+                    <div class="analysis-title">
+                        📅 周期性模式
+                    </div>
+                    <p>分析显示你在<strong>周一</strong>和<strong>周五</strong>的心情波动较大，建议在这两天特别关注情绪调节。</p>
+                    <p><strong>最佳心情时段：</strong>周三下午 2-4点</p>
+                    <p><strong>易疲惫时段：</strong>周五晚上 6-8点</p>
+                </div>
+
+                <div class="analysis-section">
+                    <div class="analysis-title">
+                        🎯 关键洞察
+                    </div>
+                    <ul>
+                        <li>连续记录<strong>28天</strong>，养成了良好的自我觉察习惯</li>
+                        <li>积极情绪比例提升<strong>15%</strong>，心理健康状态显著改善</li>
+                        <li>压力管理能力增强，焦虑情绪出现频率降低<strong>23%</strong></li>
+                        <li>社交活动与心情呈强正相关，建议保持社交频率</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h3>💡 个性化建议</h3>
+                <div class="recommendation-grid">
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">🧘‍♀️</div>
+                        <h4>冥想练习</h4>
+                        <p>每日10分钟晨间冥想，提升情绪稳定性</p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">🏃‍♂️</div>
+                        <h4>规律运动</h4>
+                        <p>保持每周3次运动，对心情有显著积极影响</p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">📚</div>
+                        <h4>情绪日记</h4>
+                        <p>继续记录心情，提高自我觉察能力</p>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">💤</div>
+                        <h4>改善睡眠</h4>
+                        <p>优化睡眠质量，建立固定作息时间</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>心情日记</h4>
+                <ul>
+                    <li><a href="mood-diary.html">心情记录</a></li>
+                    <li><a href="mood-analysis.html">情绪分析</a></li>
+                    <li><a href="mood-insights.html">心理洞察</a></li>
+                    <li><a href="mood-calendar.html">心情日历</a></li>
+                    <li><a href="mood-trends.html">趋势报告</a></li>
+                    <li><a href="mood-assessment.html">健康评估</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/mood-trends.js"></script>
+</body>
+
+</html>

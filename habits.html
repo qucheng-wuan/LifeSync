@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>习惯列表管理 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .habits-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .habits-header {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .add-habit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .add-habit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .habits-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .habits-list {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .habit-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .habit-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .habit-card.completed {
+            border-left-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .habit-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .habit-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .habit-info {
+            flex: 1;
+        }
+
+        .habit-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .habit-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .habit-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .habit-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .action-btn.check {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-item:hover {
+            background: #e9ecef;
+        }
+
+        .category-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .category-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-select {
+            background: white;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .color-options {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .frequency-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .frequency-option {
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .frequency-option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .habits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .habit-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .habit-actions {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">LifeSync</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                        <li><a href="mood-trends.html">趋势报告</a></li>
+                        <li><a href="mood-assessment.html">健康评估</a></li>
+                        <li><a href="mood-training.html">情绪训练</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="search.html" class="nav-link">搜索</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">习惯养成</a></span>
+            <span class="separator">›</span>
+            <span class="current">习惯列表管理</span>
+        </div>
+
+        <div class="habits-container">
+            <div class="habits-header">
+                <h1>我的习惯</h1>
+                <p>养成好习惯，成就更好的自己</p>
+                <button class="add-habit-btn" onclick="showAddHabitModal()">
+                    ➕ 添加新习惯
+                </button>
+            </div>
+
+            <div class="habits-grid">
+                <div class="habits-list">
+                    <h3>习惯列表</h3>
+                    <div id="habitsList">
+                        <!-- 习惯卡片将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="sidebar-section">
+                        <h3>今日概览</h3>
+                        <div class="quick-stats">
+                            <div class="stat-box">
+                                <div class="stat-value" id="totalHabits">12</div>
+                                <div class="stat-label">总习惯数</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="completedToday">8</div>
+                                <div class="stat-label">今日完成</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="streak">15</div>
+                                <div class="stat-label">最长连击</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="completionRate">67%</div>
+                                <div class="stat-label">完成率</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>习惯分类</h3>
+                        <div class="category-list">
+                            <div class="category-item active" data-category="all">
+                                <span>
+                                    <span class="category-color" style="background: #667eea;"></span>
+                                    全部习惯
+                                </span>
+                                <span>12</span>
+                            </div>
+                            <div class="category-item" data-category="health">
+                                <span>
+                                    <span class="category-color" style="background: #28a745;"></span>
+                                    健康习惯
+                                </span>
+                                <span>5</span>
+                            </div>
+                            <div class="category-item" data-category="learning">
+                                <span>
+                                    <span class="category-color" style="background: #ffc107;"></span>
+                                    学习习惯
+                                </span>
+                                <span>4</span>
+                            </div>
+                            <div class="category-item" data-category="work">
+                                <span>
+                                    <span class="category-color" style="background: #dc3545;"></span>
+                                    工作习惯
+                                </span>
+                                <span>3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>快捷操作</h3>
+                        <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;"
+                            onclick="location.href='habit-tracker.html'">
+                            📱 今日打卡
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;"
+                            onclick="location.href='achievements.html'">
+                            🏆 查看成就
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%;"
+                            onclick="location.href='habit-statistics.html'">
+                            📊 数据统计
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 添加/编辑习惯模态框 -->
+    <div class="modal" id="habitModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">添加新习惯</h3>
+            <form id="habitForm">
+                <div class="form-group">
+                    <label>习惯名称 *</label>
+                    <input type="text" class="form-input" id="habitName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>习惯描述</label>
+                    <textarea class="form-input form-textarea" id="habitDescription"
+                        placeholder="简单描述这个习惯..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>习惯分类</label>
+                    <select class="form-input form-select" id="habitCategory">
+                        <option value="health">健康习惯</option>
+                        <option value="learning">学习习惯</option>
+                        <option value="work">工作习惯</option>
+                        <option value="personal">个人习惯</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>习惯频率</label>
+                    <div class="frequency-options">
+                        <div class="frequency-option selected" data-frequency="daily">每天</div>
+                        <div class="frequency-option" data-frequency="weekly">每周</div>
+                        <div class="frequency-option" data-frequency="custom">自定义</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>习惯图标颜色</label>
+                    <div class="color-options">
+                        <div class="color-option selected" style="background: #667eea;" data-color="#667eea"></div>
+                        <div class="color-option" style="background: #28a745;" data-color="#28a745"></div>
+                        <div class="color-option" style="background: #ffc107;" data-color="#ffc107"></div>
+                        <div class="color-option" style="background: #dc3545;" data-color="#dc3545"></div>
+                        <div class="color-option" style="background: #6f42c1;" data-color="#6f42c1"></div>
+                        <div class="color-option" style="background: #fd7e14;" data-color="#fd7e14"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>目标天数</label>
+                    <input type="number" class="form-input" id="habitTarget" value="21" min="1" max="365">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeHabitModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存习惯</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>习惯养成</h4>
+                <ul>
+                    <li><a href="habits.html">习惯管理</a></li>
+                    <li><a href="habit-tracker.html">习惯打卡</a></li>
+                    <li><a href="achievements.html">成就徽章</a></li>
+                    <li><a href="habit-statistics.html">习惯统计</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 LifeSync. 保留所有权利。由无暗创作。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/habits.js"></script>
+</body>
+
+</html>

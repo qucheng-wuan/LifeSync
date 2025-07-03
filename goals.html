@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>目标设定 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* CSS变量定义 */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --goal-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            --success-color: #10ac84;
+            --warning-color: #ff9f43;
+            --info-color: #3742fa;
+            --shadow-soft: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .goals-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 精美的目标头部 */
+        .goals-header {
+            background: var(--goal-gradient);
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goals-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="target" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="15" cy="15" r="2" fill="%23ffffff" opacity="0.1"/><circle cx="15" cy="15" r="5" fill="none" stroke="%23ffffff" stroke-width="1" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23target)"/></svg>');
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .goals-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .goals-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .goals-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+        }
+
+        /* 主要布局 */
+        .goals-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* 添加目标区域 */
+        .add-goal-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234a5568"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.5rem;
+            padding-right: 2.5rem;
+        }
+
+        /* 分类选择器 */
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .category-option {
+            padding: 0.6rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .category-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .category-option.selected {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* 优先级选择器 */
+        .priority-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .priority-option {
+            flex: 1;
+            padding: 0.6rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .priority-option.high {
+            border-color: #ff6b6b;
+        }
+
+        .priority-option.medium {
+            border-color: #feca57;
+        }
+
+        .priority-option.low {
+            border-color: #48dbfb;
+        }
+
+        .priority-option.selected.high {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .priority-option.selected.medium {
+            background: #feca57;
+            color: white;
+        }
+
+        .priority-option.selected.low {
+            background: #48dbfb;
+            color: white;
+        }
+
+        /* 添加按钮 */
+        .add-goal-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .add-goal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 目标列表区域 */
+        .goals-list-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .filter-tab.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .goals-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        /* 目标卡片 */
+        .goal-card {
+            background: linear-gradient(145deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .goal-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .goal-card.high {
+            border-left-color: #ff6b6b;
+        }
+
+        .goal-card.medium {
+            border-left-color: #feca57;
+        }
+
+        .goal-card.low {
+            border-left-color: #48dbfb;
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .goal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.3rem;
+        }
+
+        .goal-category {
+            background: #667eea;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .goal-description {
+            color: #4a5568;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .goal-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .goal-deadline {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .goal-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 80px;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        /* 目标统计 */
+        .goals-stats-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(145deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-description {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        /* SMART目标助手 */
+        .smart-helper {
+            background: linear-gradient(145deg, #e6f3ff, #cce7ff);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3742fa;
+        }
+
+        .smart-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .smart-criteria {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .smart-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .smart-letter {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3742fa;
+            margin-bottom: 0.3rem;
+        }
+
+        .smart-word {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.3rem;
+        }
+
+        .smart-desc {
+            font-size: 0.8rem;
+            color: #4a5568;
+            line-height: 1.4;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .goals-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .goals-stats {
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .goals-container {
+                padding: 1rem;
+            }
+
+            .goals-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .category-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .priority-selector {
+                flex-direction: column;
+            }
+
+            .goals-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .filter-tabs {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .goal-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+        }
+
+        /* 自定义滚动条 */
+        .goals-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .goals-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .goals-list::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .goals-list::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* 动画效果 */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in-up {
+            animation: slideInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">LifeSync</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">时间管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pomodoro.html">番茄钟</a></li>
+                        <li><a href="calendar.html">日程安排</a></li>
+                        <li><a href="time-stats.html">时间统计</a></li>
+                        <li><a href="focus-history.html">专注记录</a></li>
+                        <li><a href="schedule-planner.html">日程规划</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">习惯养成 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="habits.html">习惯管理</a></li>
+                        <li><a href="habit-tracker.html">习惯打卡</a></li>
+                        <li><a href="achievements.html">成就徽章</a></li>
+                        <li><a href="habit-statistics.html">习惯统计</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">心情日记 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mood-diary.html">心情记录</a></li>
+                        <li><a href="mood-analysis.html">情绪分析</a></li>
+                        <li><a href="mood-insights.html">心理洞察</a></li>
+                        <li><a href="mood-calendar.html">心情日历</a></li>
+                        <li><a href="mood-trends.html">趋势报告</a></li>
+                        <li><a href="mood-assessment.html">健康评估</a></li>
+                        <li><a href="mood-training.html">情绪训练</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">目标管理 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="goals.html">目标设定</a></li>
+                        <li><a href="goal-progress.html">进度追踪</a></li>
+                        <li><a href="achievements.html">成就展示</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">个人中心 ▼</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="profile.html">个人资料</a></li>
+                        <li><a href="dashboard.html">数据概览</a></li>
+                        <li><a href="settings.html">系统设置</a></li>
+                        <li><a href="account-security.html">账户安全</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="login.html" class="nav-link">登录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb-nav">
+            <span><a href="index.html">首页</a></span>
+            <span class="separator">›</span>
+            <span><a href="#">目标管理</a></span>
+            <span class="separator">›</span>
+            <span class="current">目标设定</span>
+        </div>
+
+        <div class="goals-container">
+            <!-- 精美的目标头部 -->
+            <div class="goals-header slide-in-up">
+                <div class="header-content">
+                    <h1 class="goals-title">🎯 目标设定</h1>
+                    <p class="goals-subtitle">制定清晰的目标，点亮前进的方向</p>
+                    <div class="goals-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalGoals">12</span>
+                            <span class="stat-label">总目标数</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="activeGoals">8</span>
+                            <span class="stat-label">进行中</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="completedGoals">4</span>
+                            <span class="stat-label">已完成</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMART目标助手 -->
+            <div class="smart-helper slide-in-up">
+                <div class="smart-title">
+                    🧠 SMART目标设定助手
+                </div>
+                <div class="smart-criteria">
+                    <div class="smart-item">
+                        <div class="smart-letter">S</div>
+                        <div class="smart-word">Specific 具体的</div>
+                        <div class="smart-desc">目标要明确具体，避免模糊不清</div>
+                    </div>
+                    <div class="smart-item">
+                        <div class="smart-letter">M</div>
+                        <div class="smart-word">Measurable 可衡量的</div>
+                        <div class="smart-desc">设定可量化的指标来衡量进度</div>
+                    </div>
+                    <div class="smart-item">
+                        <div class="smart-letter">A</div>
+                        <div class="smart-word">Achievable 可实现的</div>
+                        <div class="smart-desc">目标要现实可行，符合个人能力</div>
+                    </div>
+                    <div class="smart-item">
+                        <div class="smart-letter">R</div>
+                        <div class="smart-word">Relevant 相关的</div>
+                        <div class="smart-desc">与个人价值观和长期规划相关</div>
+                    </div>
+                    <div class="smart-item">
+                        <div class="smart-letter">T</div>
+                        <div class="smart-word">Time-bound 有时限的</div>
+                        <div class="smart-desc">设定明确的完成时间点</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主要布局 -->
+            <div class="goals-layout slide-in-up">
+                <!-- 添加目标区域 -->
+                <div class="add-goal-section">
+                    <h3 class="section-title">➕ 新增目标</h3>
+                    <form id="goalForm">
+                        <div class="form-group">
+                            <label class="form-label" for="goalTitle">目标标题 *</label>
+                            <input type="text" class="form-input" id="goalTitle" placeholder="例如：每周阅读2本书" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="goalDescription">详细描述</label>
+                            <textarea class="form-input form-textarea" id="goalDescription"
+                                placeholder="描述目标的具体内容、意义和实现方式..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">目标分类</label>
+                            <div class="category-selector">
+                                <div class="category-option selected" data-category="personal">个人成长</div>
+                                <div class="category-option" data-category="career">职业发展</div>
+                                <div class="category-option" data-category="health">健康生活</div>
+                                <div class="category-option" data-category="learning">学习教育</div>
+                                <div class="category-option" data-category="financial">财务理财</div>
+                                <div class="category-option" data-category="relationship">人际关系</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">优先级</label>
+                            <div class="priority-selector">
+                                <div class="priority-option high" data-priority="high">🔥 高优先级</div>
+                                <div class="priority-option medium selected" data-priority="medium">⚡ 中优先级</div>
+                                <div class="priority-option low" data-priority="low">💫 低优先级</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="goalDeadline">目标截止日期</label>
+                            <input type="date" class="form-input form-select" id="goalDeadline">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="goalTarget">目标数值（可选）</label>
+                            <input type="number" class="form-input" id="goalTarget" placeholder="例如：阅读10本书、减重5公斤">
+                        </div>
+
+                        <button type="submit" class="add-goal-btn">🎯 创建目标</button>
+                    </form>
+                </div>
+
+                <!-- 目标列表区域 -->
+                <div class="goals-list-section">
+                    <h3 class="section-title">📋 我的目标</h3>
+
+                    <div class="filter-tabs">
+                        <div class="filter-tab active" data-filter="all">全部</div>
+                        <div class="filter-tab" data-filter="active">进行中</div>
+                        <div class="filter-tab" data-filter="completed">已完成</div>
+                        <div class="filter-tab" data-filter="paused">已暂停</div>
+                        <div class="filter-tab" data-filter="high">高优先级</div>
+                    </div>
+
+                    <div class="goals-list" id="goalsList">
+                        <!-- 目标列表将由JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 目标统计 -->
+            <div class="goals-stats-section slide-in-up">
+                <h3 class="section-title">📊 目标统计分析</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value" id="completionRate">75%</div>
+                        <div class="stat-description">平均完成率</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-value" id="monthlyGoals">6</div>
+                        <div class="stat-description">本月新增目标</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value" id="achievementStreak">15</div>
+                        <div class="stat-description">连续完成天数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value" id="topCategory">个人成长</div>
+                        <div class="stat-description">最活跃分类</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>目标管理</h4>
+                <ul>
+                    <li><a href="goals.html">目标设定</a></li>
+                    <li><a href="goal-progress.html">进度追踪</a></li>
+                    <li><a href="achievements.html">成就展示</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <ul>
+                    <li><a href="about.html">关于LifeSync</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="contact.html">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifeSync. 保留所有权利。 | 让每一天都充满意义</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/goals.js"></script>
+</body>
+
+</html>

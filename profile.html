@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人资料 - LifeSync</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #667eea;
+            margin-bottom: 1rem;
+            background: #f0f0f0;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .user-title {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .user-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-input {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .save-btn {
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">LifeSync</span>
+                </a>
+            </div>
+            <div class="nav-toggle" onclick="toggleNav()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-menu">
+                <ul class="nav-list">
+                    <li class="dropdown">
+                        <a href="#">时间管理 ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="pomodoro.html">🍅 番茄钟</a></li>
+                            <li><a href="calendar.html">📅 日程安排</a></li>
+                            <li><a href="time-stats.html">📊 时间统计</a></li>
+                            <li><a href="focus-history.html">📈 专注历史</a></li>
+                            <li><a href="schedule-planner.html">📋 日程规划</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">习惯养成 ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="habits.html">✅ 习惯列表</a></li>
+                            <li><a href="habit-tracker.html">📝 习惯打卡</a></li>
+                            <li><a href="achievements.html">🏆 成就系统</a></li>
+                            <li><a href="habit-statistics.html">📊 习惯统计</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">心情日记 ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="mood-diary.html">😊 心情记录</a></li>
+                            <li><a href="mood-analysis.html">📈 情绪分析</a></li>
+                            <li><a href="mood-insights.html">💡 心理洞察</a></li>
+                            <li><a href="mood-calendar.html">📅 心情日历</a></li>
+                            <li><a href="mood-trends.html">📊 趋势报告</a></li>
+                            <li><a href="mood-assessment.html">🩺 健康评估</a></li>
+                            <li><a href="mood-training.html">🧘 情绪训练</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">个人中心 ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="profile.html">📝 个人资料</a></li>
+                            <li><a href="dashboard.html">📊 数据概览</a></li>
+                            <li><a href="settings.html">⚙️ 系统设置</a></li>
+                            <li><a href="account-security.html">🔒 账户安全</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="login.html">🔐 登录</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="profile-container">
+            <div class="profile-header">
+                <h1>👤 个人资料</h1>
+                <p>管理你的个人信息和偏好设置</p>
+            </div>
+
+            <div class="profile-grid">
+                <div class="profile-sidebar">
+                    <div class="profile-card">
+                        <div class="avatar-section">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjBGMEYwIi8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNDAiIHI9IjE4IiBmaWxsPSIjNjY3RUVBIi8+CjxwYXRoIGQ9Ik0yMCA5MFY4NUMyMCA3OC4zNzI2IDI1LjM3MjYgNzMgMzIgNzNIODhDOTQuNjI3NCA3MyAxMDAgNzguMzcyNiAxMDAgODVWOTAiIGZpbGw9IiM2NjdFRUEiLz4KPC9zdmc+"
+                                alt="用户头像" class="avatar" id="userAvatar">
+                            <div class="user-name" id="userName">张三</div>
+                            <div class="user-title" id="userTitle">生活管理专家</div>
+                        </div>
+
+                        <div class="user-stats">
+                            <div class="stat-item">
+                                <div class="stat-number" id="totalDays">128</div>
+                                <div class="stat-label">使用天数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="totalHabits">15</div>
+                                <div class="stat-label">习惯数量</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="achievementCount">12</div>
+                                <div class="stat-label">获得成就</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="moodEntries">89</div>
+                                <div class="stat-label">心情记录</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-card">
+                        <h3>快速操作</h3>
+                        <div class="quick-actions">
+                            <a href="dashboard.html" class="action-btn btn-primary">数据概览</a>
+                            <a href="settings.html" class="action-btn btn-secondary">系统设置</a>
+                            <a href="account-security.html" class="action-btn btn-secondary">账户安全</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-main">
+                    <div class="form-section">
+                        <div class="form-title">
+                            📝 基本信息
+                        </div>
+                        <form id="profileForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="displayName">姓名</label>
+                                    <input type="text" class="form-input" id="displayName" value="张三">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="email">邮箱</label>
+                                    <input type="email" class="form-input" id="email" value="zhangsan@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="phone">手机号</label>
+                                    <input type="tel" class="form-input" id="phone" value="138****1234">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="birthday">生日</label>
+                                    <input type="date" class="form-input" id="birthday" value="1995-06-15">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="occupation">职业</label>
+                                    <input type="text" class="form-input" id="occupation" value="软件工程师">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="location">所在地</label>
+                                    <input type="text" class="form-input" id="location" value="北京市">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="bio">个人简介</label>
+                                <textarea class="form-input form-textarea" id="bio"
+                                    placeholder="介绍一下自己...">热爱生活，追求高效的时间管理和健康的生活方式。</textarea>
+                            </div>
+                            <button type="submit" class="save-btn">保存信息</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LifeSync</h3>
+                <p>您的个人数字生活管理专家</p>
+            </div>
+            <div class="footer-section">
+                <h4>个人中心</h4>
+                <ul>
+                    <li><a href="profile.html">个人资料</a></li>
+                    <li><a href="dashboard.html">数据概览</a></li>
+                    <li><a href="settings.html">系统设置</a></li>
+                    <li><a href="account-security.html">账户安全</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>帮助支持</h4>
+                <ul>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 LifeSync. 保留所有权利。由无暗创作。</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+
+</html>

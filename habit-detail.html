@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>习惯详情 - LifeSync个人数字生活管理平台</title>
+    <meta name="description" content="查看习惯详细信息、统计数据和打卡历史">
+    <meta name="keywords" content="习惯详情,习惯统计,打卡历史,习惯分析">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/habit-detail.css">
+</head>
+
+<body>
+    <!-- 统一导航菜单 -->
+    <header>
+        <nav class="main-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <a href="index.html">🌟 LifeSync</a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">首页</a></li>
+                    <li class="dropdown">
+                        <a href="#">时间管理 ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="pomodoro.html">🍅 番茄钟</a></li>
+                            <li><a href="calendar.html">📅 日程安排</a></li>
+                            <li><a href="time-stats.html">📊 时间统计</a></li>
+                            <li><a href="focus-history.html">📈 专注历史</a></li>
+                            <li><a href="schedule-planner.html">📋 日程规划</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">习惯养成 ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="habits.html">✅ 习惯列表</a></li>
+                            <li><a href="habit-tracker.html">📝 习惯打卡</a></li>
+                            <li><a href="achievements.html">🏆 成就系统</a></li>
+                            <li><a href="habit-statistics.html">📊 习惯统计</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">心情日记 ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="mood-diary.html">😊 记录心情</a></li>
+                            <li><a href="mood-calendar.html">📅 心情日历</a></li>
+                            <li><a href="mood-analysis.html">📈 情感分析</a></li>
+                            <li><a href="mood-insights.html">💡 心理洞察</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">目标管理 ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="goals.html">🎯 目标列表</a></li>
+                            <li><a href="goal-planning.html">📋 目标规划</a></li>
+                            <li><a href="progress-tracking.html">📊 进度追踪</a></li>
+                            <li><a href="milestone-celebration.html">🎉 里程碑</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="profile.html">👤 个人中心</a></li>
+                    <li><a href="login.html">🔐 登录</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 页面主要内容 -->
+    <main class="main-content">
+        <!-- 习惯基本信息 -->
+        <section class="habit-header card">
+            <div class="habit-info">
+                <div class="habit-icon">💧</div>
+                <div class="habit-details">
+                    <h1 id="habitName">每日喝水习惯</h1>
+                    <p class="habit-description" id="habitDescription">
+                        保持身体水分平衡，养成健康的饮水习惯。每天至少喝8杯水，约2000ml。
+                    </p>
+                    <div class="habit-meta">
+                        <span class="meta-item">📅 创建时间：2024年1月1日</span>
+                        <span class="meta-item">🎯 目标：每日8杯水</span>
+                        <span class="meta-item">📊 类型：健康习惯</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="habit-actions">
+                <button class="btn btn-primary" onclick="checkInHabit()" id="checkInBtn">
+                    ✅ 立即打卡
+                </button>
+                <button class="btn btn-secondary" onclick="editHabit()">
+                    ✏️ 编辑习惯
+                </button>
+                <button class="btn btn-outline" onclick="shareHabit()">
+                    📤 分享习惯
+                </button>
+            </div>
+        </section>
+
+        <!-- 习惯统计概览 -->
+        <section class="habit-stats">
+            <div class="stats-grid">
+                <div class="stat-card card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-info">
+                        <h3 id="currentStreak">15</h3>
+                        <p>连续天数</p>
+                    </div>
+                </div>
+
+                <div class="stat-card card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-info">
+                        <h3 id="completionRate">87%</h3>
+                        <p>完成率</p>
+                    </div>
+                </div>
+
+                <div class="stat-card card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <h3 id="totalDays">42</h3>
+                        <p>总打卡天数</p>
+                    </div>
+                </div>
+
+                <div class="stat-card card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-info">
+                        <h3 id="longestStreak">23</h3>
+                        <p>最长连续</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 今日进度 -->
+        <section class="today-progress card">
+            <h2>📊 今日进度</h2>
+            <div class="progress-container">
+                <div class="progress-circle">
+                    <div class="circle-chart">
+                        <span class="progress-number">8</span>
+                        <span class="progress-unit">/ 8 杯</span>
+                    </div>
+                </div>
+
+                <div class="progress-details">
+                    <h3>今日饮水记录</h3>
+                    <div class="water-glasses" id="waterGlasses">
+                        <div class="glass filled" data-time="08:00">🥛</div>
+                        <div class="glass filled" data-time="09:30">🥛</div>
+                        <div class="glass filled" data-time="11:00">🥛</div>
+                        <div class="glass filled" data-time="12:30">🥛</div>
+                        <div class="glass filled" data-time="14:00">🥛</div>
+                        <div class="glass filled" data-time="16:00">🥛</div>
+                        <div class="glass filled" data-time="18:00">🥛</div>
+                        <div class="glass filled" data-time="20:00">🥛</div>
+                    </div>
+                    <p class="progress-status">🎉 恭喜！今日目标已完成</p>
+                    <button class="btn btn-outline" onclick="addWaterIntake()">➕ 记录饮水</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 打卡日历 -->
+        <section class="habit-calendar card">
+            <h2>📅 打卡日历</h2>
+            <div class="calendar-header">
+                <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
+                <h3 id="currentMonth">2024年1月</h3>
+                <button class="calendar-nav" onclick="changeMonth(1)">›</button>
+            </div>
+
+            <div class="calendar-grid">
+                <div class="calendar-weekdays">
+                    <div class="weekday">日</div>
+                    <div class="weekday">一</div>
+                    <div class="weekday">二</div>
+                    <div class="weekday">三</div>
+                    <div class="weekday">四</div>
+                    <div class="weekday">五</div>
+                    <div class="weekday">六</div>
+                </div>
+
+                <div class="calendar-days" id="calendarDays">
+                    <!-- 动态生成日期 -->
+                </div>
+            </div>
+
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <div class="legend-color completed"></div>
+                    <span>已完成</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color partial"></div>
+                    <span>部分完成</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color missed"></div>
+                    <span>未完成</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color today"></div>
+                    <span>今天</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 习惯趋势图表 -->
+        <section class="habit-chart card">
+            <h2>📈 习惯趋势</h2>
+            <div class="chart-controls">
+                <button class="chart-period active" onclick="changePeriod('week')">本周</button>
+                <button class="chart-period" onclick="changePeriod('month')">本月</button>
+                <button class="chart-period" onclick="changePeriod('quarter')">本季度</button>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="habitChart" width="800" height="400"></canvas>
+            </div>
+
+            <div class="chart-insights">
+                <h3>📊 数据洞察</h3>
+                <ul id="insights">
+                    <li>🔥 连续15天保持打卡，表现优秀！</li>
+                    <li>📈 本周完成率比上周提高了12%</li>
+                    <li>⏰ 最佳打卡时间段：上午8-10点</li>
+                    <li>🎯 距离下一个里程碑（连续30天）还有15天</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 打卡历史记录 -->
+        <section class="check-in-history card">
+            <h2>📋 打卡历史</h2>
+            <div class="history-filters">
+                <button class="filter-btn active" onclick="filterHistory('all')">全部</button>
+                <button class="filter-btn" onclick="filterHistory('completed')">已完成</button>
+                <button class="filter-btn" onclick="filterHistory('partial')">部分完成</button>
+                <button class="filter-btn" onclick="filterHistory('missed')">未完成</button>
+            </div>
+
+            <div class="history-list" id="historyList">
+                <div class="history-item completed">
+                    <div class="history-date">
+                        <span class="date">1月15日</span>
+                        <span class="weekday">今天</span>
+                    </div>
+                    <div class="history-status">
+                        <span class="status-badge completed">✅ 已完成</span>
+                        <span class="status-detail">8/8 杯水</span>
+                    </div>
+                    <div class="history-note" id="note-20240115">
+                        今天感觉很好，及时补充水分让我精力充沛！
+                    </div>
+                    <div class="history-actions">
+                        <button class="btn-icon" onclick="editNote('20240115')" title="编辑备注">✏️</button>
+                        <button class="btn-icon" onclick="viewDetails('20240115')" title="查看详情">👁️</button>
+                    </div>
+                </div>
+
+                <div class="history-item completed">
+                    <div class="history-date">
+                        <span class="date">1月14日</span>
+                        <span class="weekday">昨天</span>
+                    </div>
+                    <div class="history-status">
+                        <span class="status-badge completed">✅ 已完成</span>
+                        <span class="status-detail">8/8 杯水</span>
+                    </div>
+                    <div class="history-note">
+                        工作很忙，但还是坚持完成了饮水目标。
+                    </div>
+                </div>
+
+                <div class="history-item partial">
+                    <div class="history-date">
+                        <span class="date">1月13日</span>
+                        <span class="weekday">前天</span>
+                    </div>
+                    <div class="history-status">
+                        <span class="status-badge partial">⚠️ 部分完成</span>
+                        <span class="status-detail">6/8 杯水</span>
+                    </div>
+                    <div class="history-note">
+                        外出活动，忘记及时补水。下次要设置提醒。
+                    </div>
+                </div>
+
+                <div class="history-item missed">
+                    <div class="history-date">
+                        <span class="date">1月12日</span>
+                        <span class="weekday">3天前</span>
+                    </div>
+                    <div class="history-status">
+                        <span class="status-badge missed">❌ 未完成</span>
+                        <span class="status-detail">3/8 杯水</span>
+                    </div>
+                    <div class="history-note">
+                        感冒了，没有注意饮水。需要在生病时更加注意补水。
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-outline load-more" onclick="loadMoreHistory()">加载更多历史记录</button>
+        </section>
+
+        <!-- 相关推荐 -->
+        <aside class="related-habits card">
+            <h2>💡 相关推荐</h2>
+            <div class="related-list">
+                <div class="related-item">
+                    <span class="related-icon">🏃</span>
+                    <div class="related-info">
+                        <h4><a href="habit-detail.html?id=2">每日运动习惯</a></h4>
+                        <p>搭配饮水习惯，让身体更健康</p>
+                    </div>
+                </div>
+
+                <div class="related-item">
+                    <span class="related-icon">🥗</span>
+                    <div class="related-info">
+                        <h4><a href="habit-detail.html?id=3">健康饮食习惯</a></h4>
+                        <p>营养均衡，配合充足水分</p>
+                    </div>
+                </div>
+
+                <div class="related-item">
+                    <span class="related-icon">😴</span>
+                    <div class="related-info">
+                        <h4><a href="habit-detail.html?id=4">规律作息习惯</a></h4>
+                        <p>良好作息，促进新陈代谢</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="habit-tips">
+                <h3>💡 习惯小贴士</h3>
+                <ul>
+                    <li>🔔 设置定时提醒，每2小时喝一次水</li>
+                    <li>🥤 选择合适的水杯，方便携带和计量</li>
+                    <li>🍋 可以加入柠檬片增加口感</li>
+                    <li>📱 使用手机应用记录饮水量</li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 统一版权页脚 -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>🌟 LifeSync</h3>
+                <p>让生活更有序，让成长更可见</p>
+                <p>一个现代化的个人数字生活管理平台</p>
+                <div class="social-links">
+                    <a href="#" aria-label="微博">🐱</a>
+                    <a href="#" aria-label="微信">💬</a>
+                    <a href="#" aria-label="QQ">🐧</a>
+                    <a href="#" aria-label="邮箱">📧</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>⏰ 时间管理</h4>
+                <ul>
+                    <li><a href="pomodoro.html">番茄钟计时器</a></li>
+                    <li><a href="calendar.html">日程安排</a></li>
+                    <li><a href="time-stats.html">时间统计</a></li>
+                    <li><a href="focus-history.html">专注历史</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>✅ 习惯养成</h4>
+                <ul>
+                    <li><a href="habits.html">习惯列表</a></li>
+                    <li><a href="habit-tracker.html">习惯打卡</a></li>
+                    <li><a href="achievements.html">成就系统</a></li>
+                    <li><a href="habit-statistics.html">习惯统计</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>😊 心情日记</h4>
+                <ul>
+                    <li><a href="mood-diary.html">记录心情</a></li>
+                    <li><a href="mood-calendar.html">心情日历</a></li>
+                    <li><a href="mood-analysis.html">情感分析</a></li>
+                    <li><a href="mood-insights.html">心理洞察</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>🎯 目标管理</h4>
+                <ul>
+                    <li><a href="goals.html">目标列表</a></li>
+                    <li><a href="goal-planning.html">目标规划</a></li>
+                    <li><a href="progress-tracking.html">进度追踪</a></li>
+                    <li><a href="milestone-celebration.html">里程碑庆祝</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>👤 用户服务</h4>
+                <ul>
+                    <li><a href="profile.html">个人资料</a></li>
+                    <li><a href="settings.html">应用设置</a></li>
+                    <li><a href="help.html">使用帮助</a></li>
+                    <li><a href="feedback.html">意见反馈</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-container">
+                <p>&copy; 2024 LifeSync - 个人数字生活管理平台. 保留所有权利.</p>
+                <p>🎓 学号：您的学号 | 姓名：您的姓名 | Web安全课程期末大作业</p>
+                <p>🔒 本站已通过XSS安全防护验证 | 💻 响应式设计支持 | 🌙 支持深色模式</p>
+                <p>📧 联系邮箱：contact@lifesync.com | 📱 客服电话：400-123-4567</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/habit-detail.js"></script>
+</body>
+
+</html>
